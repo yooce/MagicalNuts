@@ -1,0 +1,18 @@
+<Project>
+  <PropertyGroup>
+    <VersionPrefix>0.1.0</VersionPrefix>
+
+    <!-- NuGet Packaging -->
+    <PackageVersion>$(Version)</PackageVersion>
+    <Authors>yooce</Authors>
+    <Copyright>©yooce</Copyright>
+    <PackageTags>magicalnuts</PackageTags>
+    <PackageProjectUrl>https://github.com/yooce/MagicalNuts</PackageProjectUrl>
+    <RepositoryUrl>$(PackageProjectUrl)</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+
+    <MagicalNutsPackageDescription>C#による投資検証ライブラリ</MagicalNutsPackageDescription>
+
+  </PropertyGroup>
+</Project>
