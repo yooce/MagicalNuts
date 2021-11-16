@@ -6,7 +6,7 @@ using System.Linq;
 using System.Runtime.Versioning;
 using System.Windows.Forms.DataVisualization.Charting;
 
-namespace MagicalNuts.UI.AvgPriceMove
+namespace MagicalNuts.UI.AveragePriceMove
 {
 	/// <summary>
 	/// 平均値動き推移のチャートを表します。
