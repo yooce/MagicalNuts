@@ -7,8 +7,8 @@
 
     <RootNamespace>MagicalNuts.UI.Base</RootNamespace>
     <AssemblyName>MagicalNuts.UI.Base</AssemblyName>
-    <PackageId>MagicalNuts.IncrementalTextBox</PackageId>
-    <Authors>One to Zero Software</Authors>
+    <PackageId></PackageId>
+    <Authors></Authors>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/yooce/MagicalNuts</PackageProjectUrl>
     <RepositoryUrl>https://github.com/yooce/MagicalNuts</RepositoryUrl>
