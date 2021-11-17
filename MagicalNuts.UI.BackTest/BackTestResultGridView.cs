@@ -251,14 +251,14 @@ namespace MagicalNuts.UI.BackTest
 			// ColumnExpectedReturn
 			ColumnExpectedReturn = new DataGridViewTextBoxColumn();
 			ColumnExpectedReturn.DataPropertyName = "ExpectedReturn";
-			ColumnExpectedReturn.DefaultCellStyle = cellStyleP;
+			ColumnExpectedReturn.DefaultCellStyle = cellStylePoint;
 			ColumnExpectedReturn.HeaderText = "期待損益";
 			ColumnExpectedReturn.Name = "ColumnExpectedReturn";
 
 			// ColumnAvgHoldDays
 			ColumnAvgHoldDays = new DataGridViewTextBoxColumn();
 			ColumnAvgHoldDays.DataPropertyName = "AverageHoldDays";
-			ColumnAvgHoldDays.DefaultCellStyle = cellStyleP;
+			ColumnAvgHoldDays.DefaultCellStyle = cellStylePoint;
 			ColumnAvgHoldDays.HeaderText = "平均保持日数";
 			ColumnAvgHoldDays.Name = "ColumnAvgHoldDays";
 

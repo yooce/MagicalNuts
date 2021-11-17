@@ -198,6 +198,12 @@ namespace MagicalNuts.UI.BackTest
 						break;
 				}
 			}
+			else if (Columns[e.ColumnIndex].Name == ColumnEntryPrice.Name
+				|| Columns[e.ColumnIndex].Name == ColumnExitPrice.Name)
+			{
+				// objectをdecimalで受けて、さらにdoubleにしないと何故か整数でも小数点以下が表示されてしまう
+				if (e.Value != null) e.Value = (double)(decimal)e.Value;
+			}
 		}
 	}
 }

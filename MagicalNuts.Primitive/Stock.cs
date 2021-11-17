@@ -60,6 +60,7 @@ namespace MagicalNuts.Primitive
 		/// <returns>現在のオブジェクトを表す文字列</returns>
 		public override string ToString()
 		{
+			if (Name == null) return Code;
 			return Code + " " + Name;
 		}
 	}
