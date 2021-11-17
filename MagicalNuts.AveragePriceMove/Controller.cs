@@ -40,6 +40,7 @@ namespace MagicalNuts.AveragePriceMove
 		/// </summary>
 		/// <param name="candles">ロウソク足の配列</param>
 		/// <param name="pt">価格の種類</param>
+		/// <param name="now">基準日時</param>
 		/// <param name="years">年数</param>
 		/// <returns>平均値動き推移</returns>
 		public static AnnualData<decimal>[] GetAveragePriceMove(Candle[] candles, PriceType pt, DateTime now, int years)
