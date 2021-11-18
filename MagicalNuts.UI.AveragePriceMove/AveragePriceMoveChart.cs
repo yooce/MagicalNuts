@@ -35,65 +35,11 @@ namespace MagicalNuts.UI.AveragePriceMove
 		}
 
 		/// <summary>
-		/// 平均値動き推移を設定します。
-		/// </summary>
-		/// <param name="apms">平均値動き推移</param>
-		/// <returns>Series</returns>
-		public Series SetAveragePriceMove(AnnualData<decimal>[] apms)
-		{
-			// クリア
-			Series.Clear();
-			ChartAreas[0].AxisX.CustomLabels.Clear();
-
-			// Series作成
-			Series series = GenerateSeries();
-			Series.Add(series);
-
-			// データが１つも無い場合
-			if (apms == null) return series;
-
-			// プロット
-			DateTime dt = new DateTime(2020, 1, 1); // 閏年が必要
-			// 日付ごとに処理
-			while (dt < new DateTime(2021, 1, 1))
-			{
-				// 月日で検索
-				AnnualData<decimal> apm = null;
-				foreach (AnnualData<decimal> temp in apms)
-				{
-					if (temp.Month == dt.Month && temp.Day == dt.Day)
-					{
-						apm = temp;
-						break;
-					}
-				}
-
-				// プロット
-				if (apm != null)
-				{
-					DataPoint dp = new DataPoint(dt.DayOfYear, (double)apm.Data * 100);
-					series.Points.Add(dp);
-				}
-
-				// CustomLabel
-				if (dt.AddDays(-1).Month != dt.Month) ChartAreas[0].AxisX.CustomLabels.Add(GetCustomLabelX(dt));
-
-				// 翌日へ
-				dt = dt.AddDays(1);
-			}
-
-			// Y軸設定更新
-			UpdateAxisYSettings();
-
-			return series;
-		}
-
-		/// <summary>
 		/// 銘柄ごとの平均値動き推移を設定します。
 		/// </summary>
 		/// <param name="apms">銘柄ごとの平均値動き推移</param>
 		/// <returns>銘柄ごとのSeries</returns>
-		public Series[] SetAveragePriceMoves(AnnualData<decimal>[][] apms)
+		public Series[] SetAveragePriceMove(params AnnualData<decimal>[][] apms)
 		{
 			// クリア
 			Series.Clear();
