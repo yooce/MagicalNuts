@@ -15,6 +15,8 @@ namespace MagicalNuts.UI.Base
 		public PropertyEditForm(IPropertyHolder ph)
 		{
 			InitializeComponent();
+
+			Text = ph.Name;
 			propertyGrid.SelectedObject = ph.Properties;
 		}
 

@@ -100,11 +100,11 @@ namespace TradingChartSample
 			{
 				// 追加
 				plotter = new T();
-				await plotter.SetUpAsync();
 
 				PropertyEditForm form = new PropertyEditForm(plotter);
 				if (form.ShowDialog() != DialogResult.OK) return null;
 
+				await plotter.SetUpAsync();
 				chart.AddPlotter(plotter);
 				return plotter;
 			}
