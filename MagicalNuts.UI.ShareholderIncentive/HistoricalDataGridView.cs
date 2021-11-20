@@ -54,6 +54,7 @@ namespace MagicalNuts.UI.ShareholderIncentive
 		public HistoricalDataGridView()
 		{
 			CellPainting += new DataGridViewCellPaintingEventHandler(dataGridView_CellPainting);
+			CellFormatting += new DataGridViewCellFormattingEventHandler(dataGridView_CellFormatting);
 		}
 
 		/// <summary>
@@ -195,6 +196,25 @@ namespace MagicalNuts.UI.ShareholderIncentive
 					+ HistoricalData.BeforeNum) e.CellStyle.BackColor = MaxValueCellColor;
 				if (e.RowIndex == HistoricalData.AnnualDataList[e.ColumnIndex - ColumnAnnualDataFirstIndex].MinValueIndex
 					+ HistoricalData.BeforeNum) e.CellStyle.BackColor = MinValueCellColor;
+			}
+		}
+
+		/// <summary>
+		/// CellFormattingイベントを処理します。
+		/// </summary>
+		/// <param name="sender">イベント発行体</param>
+		/// <param name="e">イベント引数</param>
+		private void dataGridView_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
+		{
+			if (e.ColumnIndex == ColumnDaysFromLastDayIndex)
+			{
+				// 権利付き最終日前
+				if (e.RowIndex < HistoricalData.BeforeNum) Rows[e.RowIndex].Cells[ColumnDaysFromLastDayIndex].Style.Format = "0日前";
+				// 権利付き最終日
+				else if (e.RowIndex == HistoricalData.BeforeNum)
+					Rows[e.RowIndex].Cells[ColumnDaysFromLastDayIndex].Style.Format = "権利付き最終日";
+				// 権利付き最終日後
+				else Rows[e.RowIndex].Cells[ColumnDaysFromLastDayIndex].Style.Format = "0日後";
 			}
 		}
 	}

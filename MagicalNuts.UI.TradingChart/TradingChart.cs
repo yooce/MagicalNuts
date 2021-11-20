@@ -141,8 +141,7 @@ namespace MagicalNuts.UI.TradingChart
 		/// <param name="code">銘柄コード</param>
 		/// <param name="candles">ロウソク足の配列</param>
 		/// <param name="digits">小数点以下の桁数</param>
-		/// <param name="period">表示するロウソク足の期間</param>
-		public void SetDailyCandles(string code, Candle[] candles, int digits, CandlePeriod period)
+		public void SetDailyCandles(string code, Candle[] candles, int digits = 2)
 		{
 			// 銘柄コード
 			Code = code;
@@ -158,7 +157,7 @@ namespace MagicalNuts.UI.TradingChart
 			MainChartArea.CursorY.Interval = MainChartArea.GetCursorIntervalFromDigits(digits);
 
 			// 期間変換
-			CandlePeriod = period;
+			CandlePeriod = CandlePeriod.Dayly;
 		}
 
 		/// <summary>

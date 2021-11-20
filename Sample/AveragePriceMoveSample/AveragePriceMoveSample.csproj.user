@@ -2,10 +2,7 @@
 <Project ToolsVersion="Current" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup />
   <ItemGroup>
-    <Compile Update="IncrementalTextBox.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Update="PropertyEditForm.cs">
+    <Compile Update="Form1.cs">
       <SubType>Form</SubType>
     </Compile>
   </ItemGroup>

@@ -26,4 +26,8 @@
     <NoWarn>1701;1702;1998</NoWarn>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\MagicalNuts.Primitive\MagicalNuts.Primitive.csproj" />
+  </ItemGroup>
+
 </Project>

@@ -40,6 +40,16 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MagicalNuts.Primitive.Test"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MagicalNuts.ShareholderIncentive.Test", "Test\MagicalNuts.ShareholderIncentive.Test\MagicalNuts.ShareholderIncentive.Test.csproj", "{7B5D14E4-280E-4CC6-94CE-F7F017858F8B}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Sample", "Sample", "{0F1038A4-91C4-44EC-AF5F-2B500228C6D5}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IncrementalTextBoxSample", "Sample\IncrementalTextBoxSample\IncrementalTextBoxSample.csproj", "{76C630BE-61EC-45F1-BAB1-B0556E05BCC3}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TradingChartSample", "Sample\TradingChartSample\TradingChartSample.csproj", "{AA967514-5F0E-4D73-9202-7144FFB64B1C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AveragePriceMoveSample", "Sample\AveragePriceMoveSample\AveragePriceMoveSample.csproj", "{F881A3A6-67BE-407A-A61C-F97F521FBC20}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShareholderIncentiveSample", "Sample\ShareholderIncentive\ShareholderIncentiveSample.csproj", "{80EE37A3-D715-4B62-B45C-0FFB6BE7514B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -106,6 +116,22 @@ Global
 		{7B5D14E4-280E-4CC6-94CE-F7F017858F8B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7B5D14E4-280E-4CC6-94CE-F7F017858F8B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7B5D14E4-280E-4CC6-94CE-F7F017858F8B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{76C630BE-61EC-45F1-BAB1-B0556E05BCC3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{76C630BE-61EC-45F1-BAB1-B0556E05BCC3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{76C630BE-61EC-45F1-BAB1-B0556E05BCC3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{76C630BE-61EC-45F1-BAB1-B0556E05BCC3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AA967514-5F0E-4D73-9202-7144FFB64B1C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AA967514-5F0E-4D73-9202-7144FFB64B1C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AA967514-5F0E-4D73-9202-7144FFB64B1C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AA967514-5F0E-4D73-9202-7144FFB64B1C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F881A3A6-67BE-407A-A61C-F97F521FBC20}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F881A3A6-67BE-407A-A61C-F97F521FBC20}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F881A3A6-67BE-407A-A61C-F97F521FBC20}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F881A3A6-67BE-407A-A61C-F97F521FBC20}.Release|Any CPU.Build.0 = Release|Any CPU
+		{80EE37A3-D715-4B62-B45C-0FFB6BE7514B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{80EE37A3-D715-4B62-B45C-0FFB6BE7514B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{80EE37A3-D715-4B62-B45C-0FFB6BE7514B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{80EE37A3-D715-4B62-B45C-0FFB6BE7514B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -116,6 +142,10 @@ Global
 		{1C629AD4-44B9-4D3E-9545-CFDB63415972} = {2900CE14-2B1C-4186-BD59-50AE75A532BD}
 		{9896DD95-6596-4BC3-A70E-73F20A155CA3} = {2900CE14-2B1C-4186-BD59-50AE75A532BD}
 		{7B5D14E4-280E-4CC6-94CE-F7F017858F8B} = {2900CE14-2B1C-4186-BD59-50AE75A532BD}
+		{76C630BE-61EC-45F1-BAB1-B0556E05BCC3} = {0F1038A4-91C4-44EC-AF5F-2B500228C6D5}
+		{AA967514-5F0E-4D73-9202-7144FFB64B1C} = {0F1038A4-91C4-44EC-AF5F-2B500228C6D5}
+		{F881A3A6-67BE-407A-A61C-F97F521FBC20} = {0F1038A4-91C4-44EC-AF5F-2B500228C6D5}
+		{80EE37A3-D715-4B62-B45C-0FFB6BE7514B} = {0F1038A4-91C4-44EC-AF5F-2B500228C6D5}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {D78F15EF-31E8-4830-90B8-35D6C6366CC8}

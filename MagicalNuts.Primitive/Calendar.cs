@@ -12,7 +12,7 @@ namespace MagicalNuts.Primitive
 		/// 非同期で準備します。
 		/// </summary>
 		/// <returns>成功したかどうか</returns>
-		public virtual async Task<bool> SetUp()
+		public virtual async Task<bool> SetUpAsync()
 		{
 			return true;
 		}

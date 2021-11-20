@@ -80,12 +80,14 @@ namespace MagicalNuts.UI.ShareholderIncentive
 			ColumnCode.DataPropertyName = "Code";
 			ColumnCode.HeaderText = "コード";
 			ColumnCode.Name = "ColumnCode";
+			ColumnCode.Visible = false;
 
 			// ColumnName
 			ColumnName = new DataGridViewTextBoxColumn();
 			ColumnName.DataPropertyName = "Name";
 			ColumnName.HeaderText = "銘柄名";
 			ColumnName.Name = "ColumnName";
+			ColumnName.Visible = false;
 
 			// ColumnEntry
 			ColumnEntry = new DataGridViewTextBoxColumn();
