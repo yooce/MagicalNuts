@@ -30,7 +30,7 @@ namespace TradingChartSample
 		private void Form1_Load(object sender, EventArgs e)
 		{
 			// 株価
-			System.IO.StreamReader sr = new System.IO.StreamReader("N225.json");
+			StreamReader sr = new StreamReader("N225.json");
 			string str = sr.ReadToEnd();
 			sr.Close();
 			Candle[] candles = Utf8Json.JsonSerializer.Deserialize<Candle[]>(str);
@@ -49,7 +49,7 @@ namespace TradingChartSample
 		private void numericUpDown1_ValueChanged(object sender, EventArgs e)
 		{
 			// 拡縮
-			chart.ScreenCandleNum = (int)numericUpDown1.Value;
+			chart.ScreenCandlesNum = (int)numericUpDown1.Value;
 		}
 
 		private void button1_Click(object sender, EventArgs e)

@@ -34,7 +34,7 @@ namespace MagicalNuts.UI.TradingChart
 		/// <summary>
 		/// 画面あたりの足数を設定します。
 		/// </summary>
-		public int ScreenCandleNum
+		public int ScreenCandlesNum
 		{
 			set
 			{
