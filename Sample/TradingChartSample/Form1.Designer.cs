@@ -35,12 +35,13 @@ namespace TradingChartSample
 			this.button1 = new System.Windows.Forms.Button();
 			this.comboBox1 = new System.Windows.Forms.ComboBox();
 			this.menuStrip1 = new System.Windows.Forms.MenuStrip();
-			this.panel1 = new System.Windows.Forms.Panel();
 			this.toolStripMenuItemIndicator = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripMenuItemMa = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripMenuItemBb = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripMenuItemAtr = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripMenuItemMacd = new System.Windows.Forms.ToolStripMenuItem();
+			this.panel1 = new System.Windows.Forms.Panel();
+			this.toolStripMenuItemSample = new System.Windows.Forms.ToolStripMenuItem();
 			((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).BeginInit();
 			this.menuStrip1.SuspendLayout();
 			this.SuspendLayout();
@@ -122,19 +123,10 @@ namespace TradingChartSample
 			this.menuStrip1.TabIndex = 13;
 			this.menuStrip1.Text = "menuStrip1";
 			// 
-			// panel1
-			// 
-			this.panel1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-			this.panel1.Location = new System.Drawing.Point(0, 56);
-			this.panel1.Name = "panel1";
-			this.panel1.Size = new System.Drawing.Size(1008, 481);
-			this.panel1.TabIndex = 14;
-			// 
 			// toolStripMenuItemIndicator
 			// 
 			this.toolStripMenuItemIndicator.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripMenuItemSample,
             this.toolStripMenuItemMa,
             this.toolStripMenuItemBb,
             this.toolStripMenuItemAtr,
@@ -170,6 +162,23 @@ namespace TradingChartSample
 			this.toolStripMenuItemMacd.Size = new System.Drawing.Size(180, 22);
 			this.toolStripMenuItemMacd.Text = "MACD(&D)";
 			this.toolStripMenuItemMacd.Click += new System.EventHandler(this.toolStripMenuItemMacd_Click);
+			// 
+			// panel1
+			// 
+			this.panel1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+			this.panel1.Location = new System.Drawing.Point(0, 56);
+			this.panel1.Name = "panel1";
+			this.panel1.Size = new System.Drawing.Size(1008, 481);
+			this.panel1.TabIndex = 14;
+			// 
+			// toolStripMenuItemSample
+			// 
+			this.toolStripMenuItemSample.Name = "toolStripMenuItemSample";
+			this.toolStripMenuItemSample.Size = new System.Drawing.Size(180, 22);
+			this.toolStripMenuItemSample.Text = "サンプル(&S)";
+			this.toolStripMenuItemSample.Click += new System.EventHandler(this.toolStripMenuItemSample_Click);
 			// 
 			// Form1
 			// 
@@ -212,6 +221,7 @@ namespace TradingChartSample
 		private ToolStripMenuItem toolStripMenuItemBb;
 		private ToolStripMenuItem toolStripMenuItemAtr;
 		private ToolStripMenuItem toolStripMenuItemMacd;
+		private ToolStripMenuItem toolStripMenuItemSample;
 	}
 }
 

@@ -59,7 +59,7 @@ namespace MagicalNuts.Indicator
 
 			// 標準偏差
 			decimal std = (decimal)candles.GetRange(0, MovingAverageIndicator.Period).Select(candle =>
-				(double)candle.GetPrice(MovingAverageIndicator.PriceType)).StandardDeviation();
+				(double)candle.GetPrice(MovingAverageIndicator.PriceType)).PopulationStandardDeviation();
 
 			return new decimal[] { ma, ma + std * Deviation, ma - std * Deviation };
 		}

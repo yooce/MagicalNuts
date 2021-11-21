@@ -11,6 +11,11 @@ namespace MagicalNuts.UI.TradingChart.Plotter
 	public interface IPlotter : IPropertyHolder
 	{
 		/// <summary>
+		/// Seriesの配列を取得します。
+		/// </summary>
+		Series[] SeriesArray { get; }
+
+		/// <summary>
 		/// ChartAreaを設定します。
 		/// </summary>
 		/// <param name="mainChartArea">主ChartArea</param>
@@ -18,9 +23,10 @@ namespace MagicalNuts.UI.TradingChart.Plotter
 		SubChartArea[] SetChartArea(MainChartArea mainChartArea);
 
 		/// <summary>
-		/// Seriesの配列を取得します。
+		/// 非同期で準備します。
 		/// </summary>
-		Series[] SeriesArray { get; }
+		/// <returns>非同期タスク</returns>
+		Task SetUpAsync();
 
 		/// <summary>
 		/// データをプロットします。
@@ -28,11 +34,5 @@ namespace MagicalNuts.UI.TradingChart.Plotter
 		/// <param name="code">銘柄コード</param>
 		/// <param name="candles">ロウソク足のリスト</param>
 		void Plot(string code, List<Candle> candles);
-
-		/// <summary>
-		/// 非同期で準備します。
-		/// </summary>
-		/// <returns>非同期タスク</returns>
-		Task SetUpAsync();
 	}
 }

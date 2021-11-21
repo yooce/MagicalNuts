@@ -10,6 +10,7 @@ namespace TradingChartSample
 	public partial class Form1 : Form
 	{
 		private TradingChart chart = null;
+		private SamplePlotter SamplePlotter = null;
 		private MovingAveragePlotter MovingAveragePlotter = null;
 		private BollingerBandPlotter BollingerBandPlotter = null;
 		private AtrPlotter AtrPlotter = null;
@@ -64,6 +65,13 @@ namespace TradingChartSample
 			// 縮小
 			if (numericUpDown1.Value + 50 > numericUpDown1.Maximum) numericUpDown1.Value = numericUpDown1.Maximum;
 			else numericUpDown1.Value += 50;
+		}
+
+		private async void toolStripMenuItemSample_Click(object sender, EventArgs e)
+		{
+			// サンプル
+			SamplePlotter = await SetPlotter(SamplePlotter);
+			toolStripMenuItemSample.Checked = SamplePlotter != null;
 		}
 
 		private async void toolStripMenuItemMa_Click(object sender, EventArgs e)
