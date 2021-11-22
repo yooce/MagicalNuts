@@ -7,7 +7,7 @@ namespace MagicalNuts.BackTest.Test
 	{
 		private StrategyProperties _Properties = null;
 
-		public int? ReferenceCandlesNum => null;
+		public int ReferenceCandlesNum => 0;
 
 		public string Name => null;
 
