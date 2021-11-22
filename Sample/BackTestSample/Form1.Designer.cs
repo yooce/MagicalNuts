@@ -45,8 +45,8 @@ namespace BackTestSample
 			this.splitContainerSingle = new System.Windows.Forms.SplitContainer();
 			this.splitContainerSingleTop = new System.Windows.Forms.SplitContainer();
 			this.buttonCopy = new System.Windows.Forms.Button();
-			this.dataGridViewPosition = new MagicalNuts.UI.BackTest.PositionGridView();
-			this.backTestResult = new MagicalNuts.UI.BackTest.BackTestResultGridView();
+			this.positionGridView = new MagicalNuts.UI.BackTest.PositionGridView();
+			this.backTestResultGridView = new MagicalNuts.UI.BackTest.BackTestResultGridView();
 			this.comboBoxStrategy = new System.Windows.Forms.ComboBox();
 			this.labelStrategy = new System.Windows.Forms.Label();
 			this.buttonStrategy = new System.Windows.Forms.Button();
@@ -58,8 +58,8 @@ namespace BackTestSample
 			this.splitContainerSingleTop.Panel1.SuspendLayout();
 			this.splitContainerSingleTop.Panel2.SuspendLayout();
 			this.splitContainerSingleTop.SuspendLayout();
-			((System.ComponentModel.ISupportInitialize)(this.dataGridViewPosition)).BeginInit();
-			((System.ComponentModel.ISupportInitialize)(this.backTestResult)).BeginInit();
+			((System.ComponentModel.ISupportInitialize)(this.positionGridView)).BeginInit();
+			((System.ComponentModel.ISupportInitialize)(this.backTestResultGridView)).BeginInit();
 			this.SuspendLayout();
 			// 
 			// labelBegin
@@ -149,9 +149,9 @@ namespace BackTestSample
 			// 
 			// splitContainerSingle.Panel2
 			// 
-			this.splitContainerSingle.Panel2.Controls.Add(this.backTestResult);
+			this.splitContainerSingle.Panel2.Controls.Add(this.backTestResultGridView);
 			this.splitContainerSingle.Size = new System.Drawing.Size(1008, 467);
-			this.splitContainerSingle.SplitterDistance = 295;
+			this.splitContainerSingle.SplitterDistance = 350;
 			this.splitContainerSingle.TabIndex = 18;
 			// 
 			// splitContainerSingleTop
@@ -167,43 +167,43 @@ namespace BackTestSample
 			// 
 			// splitContainerSingleTop.Panel2
 			// 
-			this.splitContainerSingleTop.Panel2.Controls.Add(this.dataGridViewPosition);
-			this.splitContainerSingleTop.Size = new System.Drawing.Size(1008, 295);
+			this.splitContainerSingleTop.Panel2.Controls.Add(this.positionGridView);
+			this.splitContainerSingleTop.Size = new System.Drawing.Size(1008, 350);
 			this.splitContainerSingleTop.SplitterDistance = 676;
 			this.splitContainerSingleTop.TabIndex = 0;
 			// 
 			// buttonCopy
 			// 
 			this.buttonCopy.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this.buttonCopy.Location = new System.Drawing.Point(1233, 532);
+			this.buttonCopy.Location = new System.Drawing.Point(1233, 587);
 			this.buttonCopy.Name = "buttonCopy";
 			this.buttonCopy.Size = new System.Drawing.Size(75, 23);
 			this.buttonCopy.TabIndex = 12;
 			this.buttonCopy.Text = "コピー";
 			this.buttonCopy.UseVisualStyleBackColor = true;
 			// 
-			// dataGridViewPosition
+			// positionGridView
 			// 
-			this.dataGridViewPosition.AllowUserToAddRows = false;
-			this.dataGridViewPosition.AllowUserToDeleteRows = false;
-			this.dataGridViewPosition.AllowUserToOrderColumns = true;
-			this.dataGridViewPosition.AllowUserToResizeRows = false;
-			this.dataGridViewPosition.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-			this.dataGridViewPosition.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.dataGridViewPosition.Location = new System.Drawing.Point(0, 0);
-			this.dataGridViewPosition.Name = "dataGridViewPosition";
-			this.dataGridViewPosition.ReadOnly = true;
-			this.dataGridViewPosition.RowHeadersVisible = false;
-			this.dataGridViewPosition.RowTemplate.Height = 25;
-			this.dataGridViewPosition.Size = new System.Drawing.Size(326, 293);
-			this.dataGridViewPosition.TabIndex = 0;
+			this.positionGridView.AllowUserToAddRows = false;
+			this.positionGridView.AllowUserToDeleteRows = false;
+			this.positionGridView.AllowUserToOrderColumns = true;
+			this.positionGridView.AllowUserToResizeRows = false;
+			this.positionGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+			this.positionGridView.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.positionGridView.Location = new System.Drawing.Point(0, 0);
+			this.positionGridView.Name = "positionGridView";
+			this.positionGridView.ReadOnly = true;
+			this.positionGridView.RowHeadersVisible = false;
+			this.positionGridView.RowTemplate.Height = 25;
+			this.positionGridView.Size = new System.Drawing.Size(326, 348);
+			this.positionGridView.TabIndex = 0;
 			// 
-			// backTestResult
+			// backTestResultGridView
 			// 
-			this.backTestResult.AllowUserToAddRows = false;
-			this.backTestResult.AllowUserToDeleteRows = false;
-			this.backTestResult.AllowUserToOrderColumns = true;
-			this.backTestResult.AllowUserToResizeRows = false;
+			this.backTestResultGridView.AllowUserToAddRows = false;
+			this.backTestResultGridView.AllowUserToDeleteRows = false;
+			this.backTestResultGridView.AllowUserToOrderColumns = true;
+			this.backTestResultGridView.AllowUserToResizeRows = false;
 			dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
 			dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Control;
 			dataGridViewCellStyle1.Font = new System.Drawing.Font("Yu Gothic UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
@@ -211,8 +211,8 @@ namespace BackTestSample
 			dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
 			dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
 			dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-			this.backTestResult.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
-			this.backTestResult.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+			this.backTestResultGridView.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
+			this.backTestResultGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
 			dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
 			dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Window;
 			dataGridViewCellStyle2.Font = new System.Drawing.Font("Yu Gothic UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
@@ -220,11 +220,11 @@ namespace BackTestSample
 			dataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight;
 			dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
 			dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-			this.backTestResult.DefaultCellStyle = dataGridViewCellStyle2;
-			this.backTestResult.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.backTestResult.Location = new System.Drawing.Point(0, 0);
-			this.backTestResult.Name = "backTestResult";
-			this.backTestResult.ReadOnly = true;
+			this.backTestResultGridView.DefaultCellStyle = dataGridViewCellStyle2;
+			this.backTestResultGridView.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.backTestResultGridView.Location = new System.Drawing.Point(0, 0);
+			this.backTestResultGridView.Name = "backTestResultGridView";
+			this.backTestResultGridView.ReadOnly = true;
 			dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
 			dataGridViewCellStyle3.BackColor = System.Drawing.SystemColors.Control;
 			dataGridViewCellStyle3.Font = new System.Drawing.Font("Yu Gothic UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
@@ -232,11 +232,11 @@ namespace BackTestSample
 			dataGridViewCellStyle3.SelectionBackColor = System.Drawing.SystemColors.Highlight;
 			dataGridViewCellStyle3.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
 			dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-			this.backTestResult.RowHeadersDefaultCellStyle = dataGridViewCellStyle3;
-			this.backTestResult.RowHeadersVisible = false;
-			this.backTestResult.RowTemplate.Height = 25;
-			this.backTestResult.Size = new System.Drawing.Size(1006, 166);
-			this.backTestResult.TabIndex = 0;
+			this.backTestResultGridView.RowHeadersDefaultCellStyle = dataGridViewCellStyle3;
+			this.backTestResultGridView.RowHeadersVisible = false;
+			this.backTestResultGridView.RowTemplate.Height = 25;
+			this.backTestResultGridView.Size = new System.Drawing.Size(1006, 111);
+			this.backTestResultGridView.TabIndex = 0;
 			// 
 			// comboBoxStrategy
 			// 
@@ -292,8 +292,8 @@ namespace BackTestSample
 			this.splitContainerSingleTop.Panel2.ResumeLayout(false);
 			((System.ComponentModel.ISupportInitialize)(this.splitContainerSingleTop)).EndInit();
 			this.splitContainerSingleTop.ResumeLayout(false);
-			((System.ComponentModel.ISupportInitialize)(this.dataGridViewPosition)).EndInit();
-			((System.ComponentModel.ISupportInitialize)(this.backTestResult)).EndInit();
+			((System.ComponentModel.ISupportInitialize)(this.positionGridView)).EndInit();
+			((System.ComponentModel.ISupportInitialize)(this.backTestResultGridView)).EndInit();
 			this.ResumeLayout(false);
 			this.PerformLayout();
 
@@ -311,8 +311,8 @@ namespace BackTestSample
 		private SplitContainer splitContainerSingle;
 		private SplitContainer splitContainerSingleTop;
 		private Button buttonCopy;
-		private PositionGridView dataGridViewPosition;
-		private BackTestResultGridView backTestResult;
+		private PositionGridView positionGridView;
+		private BackTestResultGridView backTestResultGridView;
 		private ComboBox comboBoxStrategy;
 		private Label labelStrategy;
 		private Button buttonStrategy;

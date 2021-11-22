@@ -135,14 +135,13 @@ namespace BackTestSample
 			// 資産推移
 			chart.SetHistoricalAssetsList(result.HistoricalAssetsArray);
 
-			// ポジション
-			dataGridViewPosition.SetupColumns();
-			List<Position> positions = new List<Position>(result.Positions);
-			dataGridViewPosition.DataSource = positions;
+			// ポジション履歴
+			positionGridView.SetupColumns();
+			positionGridView.DataSource = result.Positions;
 
 			// バックテスト結果
-			backTestResult.SetupColumns();
-			backTestResult.DataSource = new BackTestResult[] { result };
+			backTestResultGridView.SetupColumns();
+			backTestResultGridView.DataSource = new BackTestResult[] { result };
 		}
 	}
 }
