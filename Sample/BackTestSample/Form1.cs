@@ -12,9 +12,10 @@ namespace BackTestSample
 	[SupportedOSPlatform("windows")]
 	public partial class Form1 : Form
 	{
-		private List<IStrategy> Strategies = null;
-		private List<IFeeCalculator> Fees = null;
 		private HistoricalAssetsChart chart = null;
+
+		private List<IStrategy> Strategies = null;
+		private List<IFeeCalculator> FeeCalculators = null;
 
 		public Form1()
 		{
@@ -35,11 +36,11 @@ namespace BackTestSample
 			Strategies = new PluginManager<IStrategy>(null).Plugins;
 			
 			// 手数料
-			Fees = new PluginManager<IFeeCalculator>(null).Plugins;
+			FeeCalculators = new PluginManager<IFeeCalculator>(null).Plugins;
 
 			// コンボボックスに追加
 			comboBoxStrategy.Items.AddRange(Strategies.Select(strategy => strategy.Name).ToArray());
-			comboBoxFee.Items.AddRange(Fees.Select(fee => fee.Name).ToArray());
+			comboBoxFee.Items.AddRange(FeeCalculators.Select(fee => fee.Name).ToArray());
 		}
 
 		private async void buttonStart_Click(object sender, EventArgs e)
@@ -51,102 +52,66 @@ namespace BackTestSample
 
 		public async Task BackTestSingle(string code)
 		{
-			if (comboBoxFee.SelectedIndex < 0 || comboBoxStrategy.SelectedIndex < 0) return;
+			if (comboBoxStrategy.SelectedIndex < 0 || comboBoxFee.SelectedIndex < 0) return;
 
 			DateTime begin = dateTimePickerBegin.Value.Date;
 			DateTime end = dateTimePickerEnd.Value.Date;
 
-			// バックテスト
-			IStrategy strategy = Strategies[comboBoxStrategy.SelectedIndex];
-
-			Stock stock = new Stock(code, code, 100);
-
-			// ロウソク足取得
+			// ロウソク足
 			StreamReader sr = new StreamReader(code + ".json");
-			string strN225 = sr.ReadToEnd();
+			string str = sr.ReadToEnd();
 			sr.Close();
-			Candle[] org_candles = JsonSerializer.Deserialize<Candle[]>(strN225);
-			org_candles.Reverse();
+			Candle[] candles = JsonSerializer.Deserialize<Candle[]>(str);
+			candles.Reverse();
 
-			// ロウソク足のコレクション
-			IndicatorCandleCollection candles = new IndicatorCandleCollection(org_candles.ToList(), stock.Code);
-
-			// 戦略準備
+			// 戦略
+			IStrategy strategy = Strategies[comboBoxStrategy.SelectedIndex];
 			await strategy.SetUpAsync();
 
-			Arguments args = new Arguments(strategy, new BackTestCandleCollection(candles, stock), begin, end, Fees[comboBoxFee.SelectedIndex]);
-
 			// バックテスト
+			Arguments args = new Arguments(strategy
+				, new BackTestCandleCollection(candles.ToList(), new Stock(code, code, 100)), begin, end, FeeCalculators[comboBoxFee.SelectedIndex]);
 			Controller controller = new Controller();
 			BackTestResult result = await controller.BackTestAsync<BackTestResult>(args);
 
 			// 結果表示
-			Set(result);
+			SetResult(result);
 		}
 
 		public async Task BackTestMulti()
 		{
-			if (comboBoxFee.SelectedIndex < 0 || comboBoxStrategy.SelectedIndex < 0) return;
+			if (comboBoxStrategy.SelectedIndex < 0 || comboBoxFee.SelectedIndex < 0) return;
 
 			DateTime begin = dateTimePickerBegin.Value.Date;
 			DateTime end = dateTimePickerEnd.Value.Date;
 
-			// 戦略準備
+			// ロウソク足
+			List<BackTestCandleCollection> stock_candles = new List<BackTestCandleCollection>();
+			StreamReader sr = new StreamReader("1717.json");
+			string str = sr.ReadToEnd();
+			sr.Close();
+			Candle[] candles = JsonSerializer.Deserialize<Candle[]>(str);
+			candles.Reverse();
+			stock_candles.Add(new BackTestCandleCollection(candles.ToList(), new Stock("1717", "1717", 100)));
+
+			sr = new StreamReader("1718.json");
+			str = sr.ReadToEnd();
+			sr.Close();
+			candles = JsonSerializer.Deserialize<Candle[]>(str);
+			candles.Reverse();
+			stock_candles.Add(new BackTestCandleCollection(candles.ToList(), new Stock("1718", "1718", 100)));
+
+			// 戦略
 			IStrategy strategy = Strategies[comboBoxStrategy.SelectedIndex];
 			await strategy.SetUpAsync();
 
-			List<BackTestCandleCollection> originalStockSets = new List<BackTestCandleCollection>();
-			StreamReader sr = new StreamReader("1717.json");
-			string strN225 = sr.ReadToEnd();
-			sr.Close();
-			Candle[] candles = JsonSerializer.Deserialize<Candle[]>(strN225);
-			candles.Reverse();
-
-			originalStockSets.Add(new BackTestCandleCollection(new IndicatorCandleCollection(candles.ToList(), "1717"), new Stock("1717", "1717", 100)));
-
-			sr = new StreamReader("1718.json");
-			strN225 = sr.ReadToEnd();
-			sr.Close();
-			candles = JsonSerializer.Deserialize<Candle[]>(strN225);
-			candles.Reverse();
-
-			originalStockSets.Add(new BackTestCandleCollection(new IndicatorCandleCollection(candles.ToList(), "1718"), new Stock("1718", "1718", 100)));
-
-
-			Arguments args = new Arguments(strategy, originalStockSets.ToArray(), begin, end, Fees[comboBoxFee.SelectedIndex]);
-
-			/*
-			// 当初資金
-			Core.Strategies.StrategyStatus state
-				= new Core.Strategies.StrategyStatus(((Core.Strategies.StrategyProperties)strategy.Properties).InitialBalance);
-			state.SetOriginalStockSets(originalStockSets.ToList());
-			//*/
-
 			// バックテスト
+			Arguments args = new Arguments(strategy, stock_candles.ToArray(), begin, end, FeeCalculators[comboBoxFee.SelectedIndex]);
 			Controller controller = new Controller();
 			BackTestResult result = await controller.BackTestAsync<BackTestResult>(args);
 
 			// 結果表示
-			Set(result);
-		}
-
-		private async Task<List<BackTestCandleCollection>> GetOriginalStockSets(IStrategy strategy
-			, List<Stock> stocks, DateTime begin, DateTime end)
-		{
-			List<BackTestCandleCollection> osss = new List<BackTestCandleCollection>();
-			for (int i = 0; i < stocks.Count; i++)
-			{
-				Console.WriteLine(stocks[i].ToString());
-
-				StreamReader sr = new StreamReader("1718.json");
-				string strN225 = sr.ReadToEnd();
-				sr.Close();
-				Candle[] candles = JsonSerializer.Deserialize<Candle[]>(strN225);
-				candles.Reverse();
-
-				osss.Add(new BackTestCandleCollection(new IndicatorCandleCollection(candles.ToList(), stocks[i].Code), stocks[i]));
-			}
-			return osss;
+			SetResult(result);
 		}
 
 		private void buttonStrategy_Click(object sender, EventArgs e)
@@ -161,18 +126,16 @@ namespace BackTestSample
 		{
 			if (comboBoxFee.SelectedIndex < 0) return;
 
-			PropertyEditForm form = new PropertyEditForm(Fees[comboBoxFee.SelectedIndex]);
+			PropertyEditForm form = new PropertyEditForm(FeeCalculators[comboBoxFee.SelectedIndex]);
 			form.ShowDialog(this);
 		}
 
-		public void Set(BackTestResult result)
+		public void SetResult(BackTestResult result)
 		{
-			// 結果表示
-
-			// チャート
+			// 資産推移
 			chart.SetHistoricalAssetsList(result.HistoricalAssetsArray);
 
-			// ポジションリスト
+			// ポジション
 			dataGridViewPosition.SetupColumns();
 			List<Position> positions = new List<Position>(result.Positions);
 			dataGridViewPosition.DataSource = positions;

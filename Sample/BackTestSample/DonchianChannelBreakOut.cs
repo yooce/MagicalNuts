@@ -29,14 +29,7 @@ namespace BackTestSample
 
 		public object Properties => _Properties;
 
-		public int ReferenceCandlesNum
-		{
-			get
-			{
-				List<int> periods = new List<int>() { _Properties.HighPeriod + 1, _Properties.LowPeriod + 1 };
-				return periods.Max();
-			}
-		}
+		public int ReferenceCandlesNum => Math.Max(_Properties.HighPeriod + 1, _Properties.LowPeriod + 1);
 
 		public async Task SetUpAsync()
 		{
