@@ -198,8 +198,8 @@ namespace MagicalNuts.BackTest
 		/// <returns>時価資産</returns>
 		private decimal CalculateMarketAssets()
 		{
-			// 正味残高
-			decimal ma = BackTestState.NetBalance;
+			// 簿価資産
+			decimal ma = BackTestState.BookAssets;
 
 			// 保有中のポジション
 			foreach (Position position in BackTestState.ActivePositions)
@@ -217,10 +217,10 @@ namespace MagicalNuts.BackTest
 				switch (position.PositionDirection)
 				{
 					case PositionDirection.Long:
-						ma += GetExitExecutionAmount(price, position.Lots, currency);
+						ma += GetExitExecutionAmount(price, position.Lots, currency) - position.EntryExecution.Amount;
 						break;
 					case PositionDirection.Short:
-						ma += GetExitExecutionAmount(price, position.Lots, currency);
+						ma += position.EntryExecution.Amount - GetExitExecutionAmount(price, position.Lots, currency);
 						break;
 				}
 			}

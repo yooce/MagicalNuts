@@ -12,7 +12,7 @@ namespace MagicalNuts.BackTest
 		/// <summary>
 		/// 参照するロウソク足の数
 		/// </summary>
-		int? ReferenceCandlesNum { get; }
+		int ReferenceCandlesNum { get; }
 
 		/// <summary>
 		/// 非同期で準備します。
