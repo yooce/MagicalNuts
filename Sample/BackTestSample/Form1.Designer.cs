@@ -263,6 +263,7 @@ namespace BackTestSample
 			this.buttonStrategy.TabIndex = 22;
 			this.buttonStrategy.Text = "戦略設定";
 			this.buttonStrategy.UseVisualStyleBackColor = true;
+			this.buttonStrategy.Click += new System.EventHandler(this.buttonStrategy_Click);
 			// 
 			// Form1
 			// 
