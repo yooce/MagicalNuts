@@ -3,7 +3,7 @@
 namespace MagicalNuts.BackTest
 {
 	/// <summary>
-	/// 手数料計算機を表します。
+	/// 手数料計算機のインターフェイスを表します。
 	/// </summary>
 	public interface IFeeCalculator : IPropertyHolder
 	{
