@@ -41,7 +41,7 @@ namespace IncrementalTextBoxSample
 			// 複数のIncrementalTextBoxで、大量の同じ検索対象群を使用する場合、
 			// それぞれのSetCandidatesを呼ぶと重くなるため、先に検索対象の辞書を作って、それぞれに設定する。
 			// また、検索高速化のための辞書キー生成と、検索ワードと検索対象の関連付けを上書きする例にもなっている。
-			Dictionary<string, List<IncrementalTextBox.ListViewCandidate>> dict = await StockIncrementalTextBox.GetCandidateListViewItemDictionaryAsync(
+			Dictionary<string, List<IncrementalTextBox.ListViewCandidate>> dict = await IncrementalTextBox.GetCandidateListViewItemDictionaryAsync(
 				Stocks, StockIncrementalTextBox.StockKeysForDictionary, StockIncrementalTextBox.StockMatch);
 			incrementalTextBox2.CandidateListViewItemDictionary = dict;
 			incrementalTextBox3.CandidateListViewItemDictionary = dict;
