@@ -33,10 +33,10 @@ namespace BackTestSample
 		private async void BackTestForm_Load(object sender, EventArgs e)
 		{
 			// 戦略
-			Strategies = new PluginManager<IStrategy>(null).Plugins;
+			Strategies = new PluginManager<IStrategy>().Plugins;
 			
 			// 手数料
-			FeeCalculators = new PluginManager<IFeeCalculator>(null).Plugins;
+			FeeCalculators = new PluginManager<IFeeCalculator>().Plugins;
 
 			// コンボボックスに追加
 			comboBoxStrategy.Items.AddRange(Strategies.Select(strategy => strategy.Name).ToArray());

@@ -45,7 +45,7 @@ namespace MagicalNuts.Primitive
 		/// PluginManagerクラスの新しいインスタンスを初期化します。
 		/// </summary>
 		/// <param name="plugin_path">プラグインのパス</param>
-		public PluginManager(string plugin_path)
+		public PluginManager(string plugin_path = null)
 		{
 			// プラグイン情報収集
 			PluginInfos = new List<PluginInfo>();
