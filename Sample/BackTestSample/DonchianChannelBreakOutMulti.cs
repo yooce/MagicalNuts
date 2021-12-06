@@ -21,6 +21,7 @@ namespace BackTestSample
 		public async Task SetUpAsync()
 		{
 			await SingleStrategy.SetUpAsync();
+			((StrategyProperties)SingleStrategy.Properties).InitialAssets = 1000000;
 		}
 
 		public void GetOrders(BackTestStatus state, List<Order> orders)

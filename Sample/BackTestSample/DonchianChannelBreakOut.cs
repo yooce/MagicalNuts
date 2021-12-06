@@ -23,6 +23,7 @@ namespace BackTestSample
 		public DonchianChannelBreakOut()
 		{
 			_Properties = new DonchianChannelBreakOutProperties();
+			_Properties.InitialAssets = 1000000;
 		}
 
 		public string Name => "ドンチアンチャネルブレイクアウト";

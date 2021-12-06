@@ -61,7 +61,7 @@ namespace BackTestSample
 			StreamReader sr = new StreamReader(code + ".json");
 			string str = sr.ReadToEnd();
 			sr.Close();
-			Candle[] candles = JsonSerializer.Deserialize<Candle[]>(str);
+			List<Candle> candles = JsonSerializer.Deserialize<Candle[]>(str).ToList();
 			candles.Reverse();
 
 			// 戦略
@@ -70,7 +70,7 @@ namespace BackTestSample
 
 			// バックテスト
 			Arguments args = new Arguments(strategy
-				, new BackTestCandleCollection(candles.ToList(), new Stock(code, code, 100)), begin, end, FeeCalculators[comboBoxFee.SelectedIndex]);
+				, new BackTestCandleCollection(candles, new Stock(code, code, 100)), begin, end, FeeCalculators[comboBoxFee.SelectedIndex]);
 			Controller controller = new Controller();
 			BackTestResult result = await controller.BackTestAsync<BackTestResult>(args);
 
@@ -90,16 +90,16 @@ namespace BackTestSample
 			StreamReader sr = new StreamReader("1717.json");
 			string str = sr.ReadToEnd();
 			sr.Close();
-			Candle[] candles = JsonSerializer.Deserialize<Candle[]>(str);
+			List<Candle> candles = JsonSerializer.Deserialize<Candle[]>(str).ToList();
 			candles.Reverse();
-			stock_candles.Add(new BackTestCandleCollection(candles.ToList(), new Stock("1717", "1717", 100)));
+			stock_candles.Add(new BackTestCandleCollection(candles, new Stock("1717", "1717", 100)));
 
 			sr = new StreamReader("1718.json");
 			str = sr.ReadToEnd();
 			sr.Close();
-			candles = JsonSerializer.Deserialize<Candle[]>(str);
+			candles = JsonSerializer.Deserialize<Candle[]>(str).ToList();
 			candles.Reverse();
-			stock_candles.Add(new BackTestCandleCollection(candles.ToList(), new Stock("1718", "1718", 100)));
+			stock_candles.Add(new BackTestCandleCollection(candles, new Stock("1718", "1718", 100)));
 
 			// 戦略
 			IStrategy strategy = Strategies[comboBoxStrategy.SelectedIndex];

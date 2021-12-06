@@ -44,7 +44,6 @@ namespace BackTestSample
 			this.buttonFee = new System.Windows.Forms.Button();
 			this.splitContainerSingle = new System.Windows.Forms.SplitContainer();
 			this.splitContainerSingleTop = new System.Windows.Forms.SplitContainer();
-			this.buttonCopy = new System.Windows.Forms.Button();
 			this.positionGridView = new MagicalNuts.UI.BackTest.PositionGridView();
 			this.backTestResultGridView = new MagicalNuts.UI.BackTest.BackTestResultGridView();
 			this.comboBoxStrategy = new System.Windows.Forms.ComboBox();
@@ -55,7 +54,6 @@ namespace BackTestSample
 			this.splitContainerSingle.Panel2.SuspendLayout();
 			this.splitContainerSingle.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.splitContainerSingleTop)).BeginInit();
-			this.splitContainerSingleTop.Panel1.SuspendLayout();
 			this.splitContainerSingleTop.Panel2.SuspendLayout();
 			this.splitContainerSingleTop.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.positionGridView)).BeginInit();
@@ -65,40 +63,45 @@ namespace BackTestSample
 			// labelBegin
 			// 
 			this.labelBegin.AutoSize = true;
-			this.labelBegin.Location = new System.Drawing.Point(12, 16);
+			this.labelBegin.Location = new System.Drawing.Point(15, 20);
+			this.labelBegin.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.labelBegin.Name = "labelBegin";
-			this.labelBegin.Size = new System.Drawing.Size(34, 15);
+			this.labelBegin.Size = new System.Drawing.Size(42, 20);
 			this.labelBegin.TabIndex = 4;
 			this.labelBegin.Text = "開始:";
 			// 
 			// dateTimePickerBegin
 			// 
-			this.dateTimePickerBegin.Location = new System.Drawing.Point(52, 12);
+			this.dateTimePickerBegin.Location = new System.Drawing.Point(65, 15);
+			this.dateTimePickerBegin.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
 			this.dateTimePickerBegin.Name = "dateTimePickerBegin";
-			this.dateTimePickerBegin.Size = new System.Drawing.Size(125, 23);
+			this.dateTimePickerBegin.Size = new System.Drawing.Size(155, 27);
 			this.dateTimePickerBegin.TabIndex = 5;
 			// 
 			// labelEnd
 			// 
 			this.labelEnd.AutoSize = true;
-			this.labelEnd.Location = new System.Drawing.Point(183, 16);
+			this.labelEnd.Location = new System.Drawing.Point(229, 20);
+			this.labelEnd.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.labelEnd.Name = "labelEnd";
-			this.labelEnd.Size = new System.Drawing.Size(34, 15);
+			this.labelEnd.Size = new System.Drawing.Size(42, 20);
 			this.labelEnd.TabIndex = 6;
 			this.labelEnd.Text = "終了:";
 			// 
 			// dateTimePickerEnd
 			// 
-			this.dateTimePickerEnd.Location = new System.Drawing.Point(223, 12);
+			this.dateTimePickerEnd.Location = new System.Drawing.Point(279, 15);
+			this.dateTimePickerEnd.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
 			this.dateTimePickerEnd.Name = "dateTimePickerEnd";
-			this.dateTimePickerEnd.Size = new System.Drawing.Size(125, 23);
+			this.dateTimePickerEnd.Size = new System.Drawing.Size(155, 27);
 			this.dateTimePickerEnd.TabIndex = 7;
 			// 
 			// buttonStart
 			// 
-			this.buttonStart.Location = new System.Drawing.Point(610, 40);
+			this.buttonStart.Location = new System.Drawing.Point(762, 50);
+			this.buttonStart.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
 			this.buttonStart.Name = "buttonStart";
-			this.buttonStart.Size = new System.Drawing.Size(75, 23);
+			this.buttonStart.Size = new System.Drawing.Size(94, 29);
 			this.buttonStart.TabIndex = 8;
 			this.buttonStart.Text = "開始";
 			this.buttonStart.UseVisualStyleBackColor = true;
@@ -107,26 +110,28 @@ namespace BackTestSample
 			// labelFee
 			// 
 			this.labelFee.AutoSize = true;
-			this.labelFee.Location = new System.Drawing.Point(344, 44);
+			this.labelFee.Location = new System.Drawing.Point(430, 55);
+			this.labelFee.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.labelFee.Name = "labelFee";
-			this.labelFee.Size = new System.Drawing.Size(46, 15);
+			this.labelFee.Size = new System.Drawing.Size(57, 20);
 			this.labelFee.TabIndex = 16;
 			this.labelFee.Text = "手数料:";
 			// 
 			// comboBoxFee
 			// 
 			this.comboBoxFee.FormattingEnabled = true;
-			this.comboBoxFee.Location = new System.Drawing.Point(396, 41);
+			this.comboBoxFee.Location = new System.Drawing.Point(495, 51);
+			this.comboBoxFee.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
 			this.comboBoxFee.Name = "comboBoxFee";
-			this.comboBoxFee.Size = new System.Drawing.Size(125, 23);
+			this.comboBoxFee.Size = new System.Drawing.Size(155, 28);
 			this.comboBoxFee.TabIndex = 17;
 			// 
 			// buttonFee
 			// 
-			this.buttonFee.Location = new System.Drawing.Point(527, 39);
-			this.buttonFee.Margin = new System.Windows.Forms.Padding(3, 0, 0, 0);
+			this.buttonFee.Location = new System.Drawing.Point(659, 49);
+			this.buttonFee.Margin = new System.Windows.Forms.Padding(4, 0, 0, 0);
 			this.buttonFee.Name = "buttonFee";
-			this.buttonFee.Size = new System.Drawing.Size(80, 25);
+			this.buttonFee.Size = new System.Drawing.Size(100, 31);
 			this.buttonFee.TabIndex = 11;
 			this.buttonFee.Text = "手数料設定";
 			this.buttonFee.UseVisualStyleBackColor = true;
@@ -139,7 +144,8 @@ namespace BackTestSample
             | System.Windows.Forms.AnchorStyles.Right)));
 			this.splitContainerSingle.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
 			this.splitContainerSingle.Cursor = System.Windows.Forms.Cursors.HSplit;
-			this.splitContainerSingle.Location = new System.Drawing.Point(0, 70);
+			this.splitContainerSingle.Location = new System.Drawing.Point(0, 88);
+			this.splitContainerSingle.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
 			this.splitContainerSingle.Name = "splitContainerSingle";
 			this.splitContainerSingle.Orientation = System.Windows.Forms.Orientation.Horizontal;
 			// 
@@ -150,8 +156,9 @@ namespace BackTestSample
 			// splitContainerSingle.Panel2
 			// 
 			this.splitContainerSingle.Panel2.Controls.Add(this.backTestResultGridView);
-			this.splitContainerSingle.Size = new System.Drawing.Size(1008, 467);
-			this.splitContainerSingle.SplitterDistance = 350;
+			this.splitContainerSingle.Size = new System.Drawing.Size(1260, 584);
+			this.splitContainerSingle.SplitterDistance = 437;
+			this.splitContainerSingle.SplitterWidth = 5;
 			this.splitContainerSingle.TabIndex = 18;
 			// 
 			// splitContainerSingleTop
@@ -159,28 +166,16 @@ namespace BackTestSample
 			this.splitContainerSingleTop.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
 			this.splitContainerSingleTop.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.splitContainerSingleTop.Location = new System.Drawing.Point(0, 0);
+			this.splitContainerSingleTop.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
 			this.splitContainerSingleTop.Name = "splitContainerSingleTop";
-			// 
-			// splitContainerSingleTop.Panel1
-			// 
-			this.splitContainerSingleTop.Panel1.Controls.Add(this.buttonCopy);
 			// 
 			// splitContainerSingleTop.Panel2
 			// 
 			this.splitContainerSingleTop.Panel2.Controls.Add(this.positionGridView);
-			this.splitContainerSingleTop.Size = new System.Drawing.Size(1008, 350);
-			this.splitContainerSingleTop.SplitterDistance = 676;
+			this.splitContainerSingleTop.Size = new System.Drawing.Size(1260, 437);
+			this.splitContainerSingleTop.SplitterDistance = 845;
+			this.splitContainerSingleTop.SplitterWidth = 5;
 			this.splitContainerSingleTop.TabIndex = 0;
-			// 
-			// buttonCopy
-			// 
-			this.buttonCopy.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this.buttonCopy.Location = new System.Drawing.Point(1233, 587);
-			this.buttonCopy.Name = "buttonCopy";
-			this.buttonCopy.Size = new System.Drawing.Size(75, 23);
-			this.buttonCopy.TabIndex = 12;
-			this.buttonCopy.Text = "コピー";
-			this.buttonCopy.UseVisualStyleBackColor = true;
 			// 
 			// positionGridView
 			// 
@@ -191,11 +186,13 @@ namespace BackTestSample
 			this.positionGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
 			this.positionGridView.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.positionGridView.Location = new System.Drawing.Point(0, 0);
+			this.positionGridView.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
 			this.positionGridView.Name = "positionGridView";
 			this.positionGridView.ReadOnly = true;
 			this.positionGridView.RowHeadersVisible = false;
+			this.positionGridView.RowHeadersWidth = 51;
 			this.positionGridView.RowTemplate.Height = 25;
-			this.positionGridView.Size = new System.Drawing.Size(326, 348);
+			this.positionGridView.Size = new System.Drawing.Size(408, 435);
 			this.positionGridView.TabIndex = 0;
 			// 
 			// backTestResultGridView
@@ -223,6 +220,7 @@ namespace BackTestSample
 			this.backTestResultGridView.DefaultCellStyle = dataGridViewCellStyle2;
 			this.backTestResultGridView.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.backTestResultGridView.Location = new System.Drawing.Point(0, 0);
+			this.backTestResultGridView.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
 			this.backTestResultGridView.Name = "backTestResultGridView";
 			this.backTestResultGridView.ReadOnly = true;
 			dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
@@ -234,32 +232,36 @@ namespace BackTestSample
 			dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
 			this.backTestResultGridView.RowHeadersDefaultCellStyle = dataGridViewCellStyle3;
 			this.backTestResultGridView.RowHeadersVisible = false;
+			this.backTestResultGridView.RowHeadersWidth = 51;
 			this.backTestResultGridView.RowTemplate.Height = 25;
-			this.backTestResultGridView.Size = new System.Drawing.Size(1006, 111);
+			this.backTestResultGridView.Size = new System.Drawing.Size(1258, 140);
 			this.backTestResultGridView.TabIndex = 0;
 			// 
 			// comboBoxStrategy
 			// 
 			this.comboBoxStrategy.FormattingEnabled = true;
-			this.comboBoxStrategy.Location = new System.Drawing.Point(52, 41);
+			this.comboBoxStrategy.Location = new System.Drawing.Point(65, 51);
+			this.comboBoxStrategy.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
 			this.comboBoxStrategy.Name = "comboBoxStrategy";
-			this.comboBoxStrategy.Size = new System.Drawing.Size(200, 23);
+			this.comboBoxStrategy.Size = new System.Drawing.Size(249, 28);
 			this.comboBoxStrategy.TabIndex = 19;
 			// 
 			// labelStrategy
 			// 
 			this.labelStrategy.AutoSize = true;
-			this.labelStrategy.Location = new System.Drawing.Point(12, 44);
+			this.labelStrategy.Location = new System.Drawing.Point(15, 55);
+			this.labelStrategy.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.labelStrategy.Name = "labelStrategy";
-			this.labelStrategy.Size = new System.Drawing.Size(34, 15);
+			this.labelStrategy.Size = new System.Drawing.Size(42, 20);
 			this.labelStrategy.TabIndex = 20;
 			this.labelStrategy.Text = "戦略:";
 			// 
 			// buttonStrategy
 			// 
-			this.buttonStrategy.Location = new System.Drawing.Point(258, 40);
+			this.buttonStrategy.Location = new System.Drawing.Point(322, 50);
+			this.buttonStrategy.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
 			this.buttonStrategy.Name = "buttonStrategy";
-			this.buttonStrategy.Size = new System.Drawing.Size(80, 23);
+			this.buttonStrategy.Size = new System.Drawing.Size(100, 29);
 			this.buttonStrategy.TabIndex = 22;
 			this.buttonStrategy.Text = "戦略設定";
 			this.buttonStrategy.UseVisualStyleBackColor = true;
@@ -267,9 +269,9 @@ namespace BackTestSample
 			// 
 			// Form1
 			// 
-			this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
+			this.AutoScaleDimensions = new System.Drawing.SizeF(120F, 120F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-			this.ClientSize = new System.Drawing.Size(1008, 537);
+			this.ClientSize = new System.Drawing.Size(1260, 671);
 			this.Controls.Add(this.buttonStrategy);
 			this.Controls.Add(this.labelStrategy);
 			this.Controls.Add(this.comboBoxStrategy);
@@ -282,6 +284,7 @@ namespace BackTestSample
 			this.Controls.Add(this.labelEnd);
 			this.Controls.Add(this.dateTimePickerBegin);
 			this.Controls.Add(this.labelBegin);
+			this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
 			this.Name = "Form1";
 			this.Text = "Form1";
 			this.Load += new System.EventHandler(this.BackTestForm_Load);
@@ -289,7 +292,6 @@ namespace BackTestSample
 			this.splitContainerSingle.Panel2.ResumeLayout(false);
 			((System.ComponentModel.ISupportInitialize)(this.splitContainerSingle)).EndInit();
 			this.splitContainerSingle.ResumeLayout(false);
-			this.splitContainerSingleTop.Panel1.ResumeLayout(false);
 			this.splitContainerSingleTop.Panel2.ResumeLayout(false);
 			((System.ComponentModel.ISupportInitialize)(this.splitContainerSingleTop)).EndInit();
 			this.splitContainerSingleTop.ResumeLayout(false);
@@ -311,7 +313,6 @@ namespace BackTestSample
 		private System.Windows.Forms.Button buttonFee;
 		private SplitContainer splitContainerSingle;
 		private SplitContainer splitContainerSingleTop;
-		private Button buttonCopy;
 		private PositionGridView positionGridView;
 		private BackTestResultGridView backTestResultGridView;
 		private ComboBox comboBoxStrategy;
