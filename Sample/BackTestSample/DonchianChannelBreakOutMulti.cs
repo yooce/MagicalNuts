@@ -26,13 +26,24 @@ namespace BackTestSample
 
 		public void GetOrders(BackTestStatus state, List<Order> orders)
 		{
-			foreach (StrategyCandleCollection candles in state.StockCandles)
+			// 並列処理
+			List<Order>[] stock_orders_array = new List<Order>[state.StockCandles.Length];
+			Parallel.For(0, state.StockCandles.Length, i =>
 			{
+				// 注文リスト作成
+				stock_orders_array[i] = new List<Order>();
+
 				// 必要期間に満たない
-				if (candles.Count < SingleStrategy.ReferenceCandlesNum) return;
+				if (state.StockCandles[i].Count < SingleStrategy.ReferenceCandlesNum) return;
 
 				// 単独銘柄用戦略
-				SingleStrategy.GetOrders(state.GetBackTestStatusForSingleStrategy(candles), orders);
+				SingleStrategy.GetOrders(state.GetBackTestStatusForSingleStrategy(state.StockCandles[i]), stock_orders_array[i]);
+			});
+
+			// 注文を合成
+			foreach (List<Order> stock_orders in stock_orders_array)
+			{
+				orders.AddRange(stock_orders);
 			}
 		}
 	}
