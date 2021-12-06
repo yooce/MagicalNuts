@@ -21,7 +21,7 @@ namespace MagicalNuts.UI.Base
 		/// </summary>
 		/// <param name="candidate">候補</param>
 		/// <returns>辞書用キーの配列</returns>
-		private string[] StockKeysForDictionary(object candidate)
+		public static string[] StockKeysForDictionary(object candidate)
 		{
 			Stock stock = candidate as Stock;
 			return new string[] { stock.Code.ToUpper()[0].ToString(), stock.Name.ToUpper()[0].ToString() };
@@ -33,7 +33,7 @@ namespace MagicalNuts.UI.Base
 		/// <param name="key">キー</param>
 		/// <param name="candidate">候補</param>
 		/// <returns>キーに対して候補が相応しいかどうか</returns>
-		private bool StockMatch(string key, object candidate)
+		public static bool StockMatch(string key, object candidate)
 		{
 			Stock stock = candidate as Stock;
 			return stock.Code.ToUpper().StartsWith(key.ToUpper()) || stock.Name.ToUpper().StartsWith(key.ToUpper());

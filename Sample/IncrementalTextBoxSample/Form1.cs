@@ -41,30 +41,12 @@ namespace IncrementalTextBoxSample
 			// 複数のIncrementalTextBoxで、大量の同じ検索対象群を使用する場合、
 			// それぞれのSetCandidatesを呼ぶと重くなるため、先に検索対象の辞書を作って、それぞれに設定する。
 			// また、検索高速化のための辞書キー生成と、検索ワードと検索対象の関連付けを上書きする例にもなっている。
-			Dictionary<string, List<IncrementalTextBox.ListViewCandidate>> dict
-				= await IncrementalTextBox.GetCandidateListViewItemDictionaryAsync(Stocks, KeysForDictionary, Match);
+			Dictionary<string, List<IncrementalTextBox.ListViewCandidate>> dict = await StockIncrementalTextBox.GetCandidateListViewItemDictionaryAsync(
+				Stocks, StockIncrementalTextBox.StockKeysForDictionary, StockIncrementalTextBox.StockMatch);
 			incrementalTextBox2.CandidateListViewItemDictionary = dict;
 			incrementalTextBox3.CandidateListViewItemDictionary = dict;
-			incrementalTextBox2.KeysForDictionary = KeysForDictionary;
-			incrementalTextBox3.KeysForDictionary = KeysForDictionary;
-			incrementalTextBox2.Match = Match;
-			incrementalTextBox3.Match = Match;
 			incrementalTextBox2.Enabled = true;
 			incrementalTextBox3.Enabled = true;
-		}
-
-		private string[] KeysForDictionary(object candidate)
-		{
-			// CodeとNameの先頭１文字を辞書のキーとする
-			Stock stock = candidate as Stock;
-			return new string[] { stock.Code.ToUpper()[0].ToString(), stock.Name.ToUpper()[0].ToString() };
-		}
-
-		private bool Match(string key, object candidate)
-		{
-			// CodeとNameの両方に検索が引っ掛かるようにする
-			Stock stock = candidate as Stock;
-			return stock.Code.ToUpper().StartsWith(key.ToUpper()) || stock.Name.ToUpper().StartsWith(key.ToUpper());
 		}
 
 		private void incrementalTextBox1_Decided(IncrementalTextBox sender, IncrementalTextBoxEventArgs e)

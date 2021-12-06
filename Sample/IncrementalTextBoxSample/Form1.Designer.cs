@@ -28,11 +28,11 @@
 		/// </summary>
 		private void InitializeComponent()
 		{
-			this.incrementalTextBox1 = new MagicalNuts.UI.Base.IncrementalTextBox();
+			this.incrementalTextBox1 = new MagicalNuts.UI.Base.StockIncrementalTextBox();
 			this.label1 = new System.Windows.Forms.Label();
 			this.textBox1 = new System.Windows.Forms.TextBox();
-			this.incrementalTextBox2 = new MagicalNuts.UI.Base.IncrementalTextBox();
-			this.incrementalTextBox3 = new MagicalNuts.UI.Base.IncrementalTextBox();
+			this.incrementalTextBox2 = new MagicalNuts.UI.Base.StockIncrementalTextBox();
+			this.incrementalTextBox3 = new MagicalNuts.UI.Base.StockIncrementalTextBox();
 			this.SuspendLayout();
 			// 
 			// incrementalTextBox1
@@ -108,11 +108,11 @@
 
 		#endregion
 
-		private MagicalNuts.UI.Base.IncrementalTextBox incrementalTextBox1;
+		private MagicalNuts.UI.Base.StockIncrementalTextBox incrementalTextBox1;
 		private System.Windows.Forms.Label label1;
 		private System.Windows.Forms.TextBox textBox1;
-		private MagicalNuts.UI.Base.IncrementalTextBox incrementalTextBox2;
-		private MagicalNuts.UI.Base.IncrementalTextBox incrementalTextBox3;
+		private MagicalNuts.UI.Base.StockIncrementalTextBox incrementalTextBox2;
+		private MagicalNuts.UI.Base.StockIncrementalTextBox incrementalTextBox3;
 	}
 }
 
