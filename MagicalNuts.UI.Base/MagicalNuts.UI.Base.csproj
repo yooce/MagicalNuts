@@ -30,4 +30,10 @@
     <ProjectReference Include="..\MagicalNuts.Primitive\MagicalNuts.Primitive.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Compile Update="StockIncrementalTextBox.cs">
+      <SubType>Component</SubType>
+    </Compile>
+  </ItemGroup>
+
 </Project>
