@@ -157,7 +157,7 @@ namespace MagicalNuts.UI.TradingChart
 			MainChartArea.CursorY.Interval = MainChartArea.GetCursorIntervalFromDigits(digits);
 
 			// 期間変換
-			CandlePeriod = CandlePeriod.Dayly;
+			// CandlePeriod = CandlePeriod.Dayly;
 		}
 
 		/// <summary>
