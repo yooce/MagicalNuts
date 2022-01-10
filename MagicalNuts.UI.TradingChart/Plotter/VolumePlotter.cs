@@ -53,11 +53,14 @@ namespace MagicalNuts.UI.TradingChart.Plotter
 		{
 			for (int x = 0; x < candles.Count; x++)
 			{
+				// シフト済みインジケーター用ロウソク足の集合
+				IndicatorCandleCollection shifted = GetCandleCollection(x);
+
 				// 値
-				DataPoint dp = new DataPoint(x, ConvertDecimalToDoubleArray(Indicator.GetValues(GetCandleCollection(x))));
+				DataPoint dp = new DataPoint(x, ConvertDecimalToDoubleArray(Indicator.GetValues(shifted)));
 
 				// 着色
-				if (candles[x].Close >= candles[x].Open) dp.Color = Color.FromArgb(127, ChartPalette.PriceUpColor);
+				if (shifted[0].Close >= shifted[0].Open) dp.Color = Color.FromArgb(127, ChartPalette.PriceUpColor);
 				else dp.Color = Color.FromArgb(127, ChartPalette.PriceDownColor);
 
 				// 追加
