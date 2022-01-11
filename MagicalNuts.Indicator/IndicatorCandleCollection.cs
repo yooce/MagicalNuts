@@ -18,7 +18,9 @@ namespace MagicalNuts.Indicator
 		/// </summary>
 		/// <param name="candles">ロウソク足のリスト</param>
 		/// <param name="code">銘柄コード</param>
-		public IndicatorCandleCollection(List<Candle> candles, string code) : base(candles, code)
+		/// <param name="period">期間</param>
+		/// <param name="unit">期間単位</param>
+		public IndicatorCandleCollection(List<Candle> candles, string code, int period = 1, PeriodUnit unit = PeriodUnit.Day) : base(candles, code, period, unit)
 		{
 		}
 

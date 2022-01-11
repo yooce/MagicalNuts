@@ -1,4 +1,5 @@
-﻿using MagicalNuts.Primitive;
+﻿using MagicalNuts.Indicator;
+using MagicalNuts.Primitive;
 using MagicalNuts.UI.TradingChart.Plotter;
 using System;
 using System.Collections.Generic;
@@ -83,12 +84,12 @@ namespace MagicalNuts.UI.TradingChart
 		/// <summary>
 		/// 銘柄コード
 		/// </summary>
-		private string Code = null;
+		private string Code => BaseCandles.Additional;
 
 		/// <summary>
-		/// 日足のリスト
+		/// 基本のインジケーター用ロウソク足の集合
 		/// </summary>
-		private List<Candle> DailyCandles = null;
+		private IndicatorCandleCollection BaseCandles = null;
 
 		/// <summary>
 		/// 表示中のロウソク足のリスト
@@ -141,23 +142,25 @@ namespace MagicalNuts.UI.TradingChart
 		/// <param name="code">銘柄コード</param>
 		/// <param name="candles">ロウソク足の配列</param>
 		/// <param name="digits">小数点以下の桁数</param>
+		[Obsolete("代わりに 'SetBaseCandles()' を使用します。")]
 		public void SetDailyCandles(string code, Candle[] candles, int digits = 2)
 		{
-			// 銘柄コード
-			Code = code;
+			SetBaseCandles(new IndicatorCandleCollection(candles.ToList(), code, 1, PeriodUnit.Day), digits);
 
+			// 期間変換
+			CandlePeriod = CandlePeriod.Dayly;
+		}
+
+		public void SetBaseCandles(IndicatorCandleCollection candles, int digits = 2)
+		{
 			// 日足設定
-			DailyCandles = new List<Candle>();
-			DailyCandles.AddRange(candles);
+			BaseCandles = candles;
 
 			// 価格表示フォーマット取得
 			PriceFormat = PriceFormatter.GetPriceFormatFromDigits(digits);
 
 			// カーソルインターバル
 			MainChartArea.CursorY.Interval = MainChartArea.GetCursorIntervalFromDigits(digits);
-
-			// 期間変換
-			// CandlePeriod = CandlePeriod.Dayly;
 		}
 
 		/// <summary>
@@ -166,7 +169,7 @@ namespace MagicalNuts.UI.TradingChart
 		private void PlotAll()
 		{
 			// 日足が無ければ何もしない
-			if (DailyCandles == null) return;
+			if (BaseCandles == null) return;
 
 			// チャートクリア
 			Series.Clear();
@@ -177,10 +180,10 @@ namespace MagicalNuts.UI.TradingChart
 			}
 
 			// 期間変換
-			DisplayCandles = CandleConverter.ConvertFromDaily(DailyCandles, _CandlePeriod);
+			DisplayCandles = CandleConverter.ConvertFromDaily(BaseCandles, _CandlePeriod);
 
 			// 主ChartArea
-			MainChartArea.SetCandles(DisplayCandles, PriceFormatter.GetDigitsFromFormat(PriceFormat).Value);
+			MainChartArea.SetCandles(new IndicatorCandleCollection(DisplayCandles, BaseCandles.Code, BaseCandles.Period, BaseCandles.PeriodUnit), PriceFormatter.GetDigitsFromFormat(PriceFormat).Value);
 
 			// プロット
 			foreach (IPlotter plotter in Plotters)

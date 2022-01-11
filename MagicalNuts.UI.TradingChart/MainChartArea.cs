@@ -1,4 +1,5 @@
-﻿using MagicalNuts.Primitive;
+﻿using MagicalNuts.Indicator;
+using MagicalNuts.Primitive;
 using MagicalNuts.UI.Base;
 using System.Collections.Generic;
 using System.Drawing;
@@ -18,7 +19,7 @@ namespace MagicalNuts.UI.TradingChart
 		/// <summary>
 		/// ロウソク足のリスト
 		/// </summary>
-		protected List<Candle> Candles = null;
+		protected IndicatorCandleCollection Candles = null;
 
 		/// <summary>
 		/// カーソルラベルX
@@ -82,9 +83,9 @@ namespace MagicalNuts.UI.TradingChart
 		/// <summary>
 		/// ロウソク足を設定します。
 		/// </summary>
-		/// <param name="candles">ロウソク足</param>
+		/// <param name="candles">インジケーター用ロウソク足の集合</param>
 		/// <param name="digits">小数点以下の桁数</param>
-		public void SetCandles(List<Candle> candles, int digits)
+		public void SetCandles(IndicatorCandleCollection candles, int digits)
 		{
 			Candles = candles;
 			AxisY2.LabelStyle.Format = PriceFormatter.GetPriceFormatFromDigits(digits);
@@ -103,7 +104,8 @@ namespace MagicalNuts.UI.TradingChart
 			base.UpdateCursors(mouse, result, x, max_x, format);
 
 			// カーソルラベルX
-			CursorLabelX.Text = Candles[x].DateTime.ToShortDateString();
+			if ((int)Candles.PeriodUnit < (int)PeriodUnit.Day) CursorLabelX.Text = Candles[x].DateTime.ToString();
+			else CursorLabelX.Text = Candles[x].DateTime.ToShortDateString();
 			CursorLabelX.Left = mouse.X - CursorLabelX.Width / 2;
 			CursorLabelX.Top = (int)(AxisY2.ValueToPixelPosition(AxisY2.ScaleView.Position) + 1 + AxisY2.ScrollBar.Size);
 

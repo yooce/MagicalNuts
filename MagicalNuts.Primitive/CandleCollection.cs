@@ -3,11 +3,29 @@
 namespace MagicalNuts.Primitive
 {
 	/// <summary>
+	/// 期間単位
+	/// </summary>
+	public enum PeriodUnit
+	{
+		Second = 0, Minute, Hour, Day, Week, Month, Year
+	}
+
+	/// <summary>
 	/// ロウソク足の集合を表します。
 	/// </summary>
 	/// <typeparam name="T">付加情報の型</typeparam>
 	public class CandleCollection<T> : List<Candle>
 	{
+		/// <summary>
+		/// 期間
+		/// </summary>
+		public int Period { get; }
+
+		/// <summary>
+		/// 期間単位
+		/// </summary>
+		public PeriodUnit PeriodUnit { get; }
+
 		/// <summary>
 		/// 付加情報
 		/// </summary>
@@ -18,11 +36,15 @@ namespace MagicalNuts.Primitive
 		/// </summary>
 		/// <param name="candles">ロウソク足のリスト</param>
 		/// <param name="add">付加情報</param>
-		public CandleCollection(List<Candle> candles, T add)
+		/// <param name="period">期間</param>
+		/// <param name="unit">期間単位</param>
+		public CandleCollection(List<Candle> candles, T add, int period = 1, PeriodUnit unit = PeriodUnit.Day)
 		{
 			Clear();
 			AddRange(candles);
 			Additional = add;
+			Period = period;
+			PeriodUnit = unit;
 		}
 
 		/// <summary>
