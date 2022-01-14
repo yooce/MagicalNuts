@@ -1,5 +1,4 @@
-﻿using MagicalNuts.Indicator;
-using MagicalNuts.Primitive;
+﻿using MagicalNuts.Primitive;
 using MagicalNuts.UI.TradingChart.Plotter;
 using System;
 using System.Collections.Generic;
@@ -22,10 +21,55 @@ namespace MagicalNuts.UI.TradingChart
 		/// </summary>
 		public CandlePeriod CandlePeriod
 		{
-			get => _CandlePeriod;
+			get
+			{
+				switch (PeriodInfo.Unit)
+				{
+					case PeriodUnit.Day:
+						return CandlePeriod.Dayly;
+					case PeriodUnit.Week:
+						return CandlePeriod.Weekly;
+					case PeriodUnit.Month:
+						return CandlePeriod.Monthly;
+					case PeriodUnit.Year:
+						return CandlePeriod.Yearly;
+					default:
+						return CandlePeriod.Dayly;
+				}
+			}
 			set
 			{
-				_CandlePeriod = value;
+				_PeriodInfo.Period = 1;
+				switch (value)
+				{
+					case CandlePeriod.Dayly:
+						_PeriodInfo.Unit = PeriodUnit.Day;
+						break;
+					case CandlePeriod.Weekly:
+						_PeriodInfo.Unit = PeriodUnit.Week;
+						break;
+					case CandlePeriod.Monthly:
+						_PeriodInfo.Unit = PeriodUnit.Month;
+						break;
+					case CandlePeriod.Yearly:
+						_PeriodInfo.Unit = PeriodUnit.Year;
+						break;
+				}
+
+				// すべてをプロット
+				PlotAll();
+			}
+		}
+
+		/// <summary>
+		/// 期間情報
+		/// </summary>
+		public PeriodInfo PeriodInfo
+		{
+			get => _PeriodInfo;
+			set
+			{
+				_PeriodInfo = value;
 
 				// すべてをプロット
 				PlotAll();
@@ -47,9 +91,9 @@ namespace MagicalNuts.UI.TradingChart
 		}
 
 		/// <summary>
-		/// ロウソク足の期間
+		/// 期間情報
 		/// </summary>
-		private CandlePeriod _CandlePeriod = CandlePeriod.Dayly;
+		private PeriodInfo _PeriodInfo = new PeriodInfo(PeriodUnit.Day, 1);
 
 		/// <summary>
 		/// 主ChartArea
@@ -82,19 +126,14 @@ namespace MagicalNuts.UI.TradingChart
 		private bool IsScrolling = false;
 
 		/// <summary>
-		/// 銘柄コード
+		/// 基本のロウソク足の集合
 		/// </summary>
-		private string Code => BaseCandles.Additional;
+		private CandleCollection<string> BaseCandles = null;
 
 		/// <summary>
-		/// 基本のインジケーター用ロウソク足の集合
+		/// 表示中のロウソク足の集合
 		/// </summary>
-		private IndicatorCandleCollection BaseCandles = null;
-
-		/// <summary>
-		/// 表示中のロウソク足のリスト
-		/// </summary>
-		private List<Candle> DisplayCandles = null;
+		private CandleCollection<string> DisplayCandles = null;
 
 		/// <summary>
 		/// 価格表示フォーマット
@@ -145,13 +184,15 @@ namespace MagicalNuts.UI.TradingChart
 		[Obsolete("代わりに 'SetBaseCandles()' を使用します。")]
 		public void SetDailyCandles(string code, Candle[] candles, int digits = 2)
 		{
-			SetBaseCandles(new IndicatorCandleCollection(candles.ToList(), code, 1, PeriodUnit.Day), digits);
-
-			// 期間変換
-			CandlePeriod = CandlePeriod.Dayly;
+			SetBaseCandles(new CandleCollection<string>(candles.ToList(), code, PeriodUnit.Day, 1), digits);
 		}
 
-		public void SetBaseCandles(IndicatorCandleCollection candles, int digits = 2)
+		/// <summary>
+		/// 基本のロウソク足の集合を設定します。
+		/// </summary>
+		/// <param name="candles">基本のロウソク足の集合</param>
+		/// <param name="digits">小数点以下の桁数</param>
+		public void SetBaseCandles(CandleCollection<string> candles, int digits = 2)
 		{
 			// 日足設定
 			BaseCandles = candles;
@@ -180,10 +221,10 @@ namespace MagicalNuts.UI.TradingChart
 			}
 
 			// 期間変換
-			DisplayCandles = CandleConverter.ConvertFromDaily(BaseCandles, _CandlePeriod);
+			DisplayCandles = BaseCandles.ConvertPeriod(PeriodInfo);
 
 			// 主ChartArea
-			MainChartArea.SetCandles(new IndicatorCandleCollection(DisplayCandles, BaseCandles.Code, BaseCandles.Period, BaseCandles.PeriodUnit), PriceFormatter.GetDigitsFromFormat(PriceFormat).Value);
+			MainChartArea.SetCandles(DisplayCandles, PriceFormatter.GetDigitsFromFormat(PriceFormat).Value);
 
 			// プロット
 			foreach (IPlotter plotter in Plotters)
@@ -312,7 +353,7 @@ namespace MagicalNuts.UI.TradingChart
 			}
 
 			// プロット
-			plotter.Plot(Code, DisplayCandles);
+			plotter.Plot(DisplayCandles.Additional, DisplayCandles);
 
 			// Y軸設定更新
 			if (updatey) UpdateAxisYSettings();
@@ -444,18 +485,33 @@ namespace MagicalNuts.UI.TradingChart
 
 			// 次のDateTime算出
 			DateTime nextDateTime = DateTime.MinValue;
-			switch (_CandlePeriod)
+			switch (PeriodInfo.Unit)
 			{
-				case CandlePeriod.Dayly:
+				case PeriodUnit.Second:
+					if (PeriodInfo.Period == 1) nextDateTime = new DateTime(prevDateTime.Value.Year, prevDateTime.Value.Month, prevDateTime.Value.Day
+						, prevDateTime.Value.Hour, prevDateTime.Value.Minute, 1).AddMinutes(1);
+					else nextDateTime = new DateTime(prevDateTime.Value.Year, prevDateTime.Value.Month, prevDateTime.Value.Day
+						, prevDateTime.Value.Hour, 1, 1).AddHours(1);
+					break;
+				case PeriodUnit.Minute:
+					if (PeriodInfo.Period == 1) nextDateTime = new DateTime(prevDateTime.Value.Year, prevDateTime.Value.Month, prevDateTime.Value.Day
+						, prevDateTime.Value.Hour, 1, 1).AddHours(1);
+					else nextDateTime = prevDateTime.Value.Date.AddDays(1);
+					break;
+				case PeriodUnit.Hour:
+					if (PeriodInfo.Period == 1) nextDateTime = prevDateTime.Value.Date.AddDays(1);
+					else nextDateTime = new DateTime(prevDateTime.Value.Year, prevDateTime.Value.Month, 1).AddMonths(1);
+					break;
+				case PeriodUnit.Day:
 					nextDateTime = new DateTime(prevDateTime.Value.Year, prevDateTime.Value.Month, 1).AddMonths(1);
 					break;
-				case CandlePeriod.Weekly:
+				case PeriodUnit.Week:
 					nextDateTime = new DateTime(prevDateTime.Value.Year, (prevDateTime.Value.Month - 1) / 3 * 3 + 1, 1).AddMonths(3);
 					break;
-				case CandlePeriod.Monthly:
+				case PeriodUnit.Month:
 					nextDateTime = new DateTime(prevDateTime.Value.Year, 1, 1).AddYears(1);
 					break;
-				case CandlePeriod.Yearly:
+				case PeriodUnit.Year:
 					nextDateTime = new DateTime(prevDateTime.Value.Year / 10 * 10, 1, 1).AddYears(10);
 					break;
 			}
@@ -495,15 +551,21 @@ namespace MagicalNuts.UI.TradingChart
 		private string GetMainCustomeLabelName(DateTime? prev, DateTime cur)
 		{
 			string name = "";
-			switch (_CandlePeriod)
+			switch (PeriodInfo.Unit)
 			{
-				case CandlePeriod.Dayly:
-				case CandlePeriod.Weekly:
+				case PeriodUnit.Second:
+					break;
+				case PeriodUnit.Minute:
+					break;
+				case PeriodUnit.Hour:
+					break;
+				case PeriodUnit.Day:
+				case PeriodUnit.Week:
 					if (prev == null || prev.Value.Year != cur.Year) name = cur.ToString("yyyy");
 					else name = cur.ToString("M月");
 					break;
-				case CandlePeriod.Monthly:
-				case CandlePeriod.Yearly:
+				case PeriodUnit.Month:
+				case PeriodUnit.Year:
 					name = cur.ToString("yyyy");
 					break;
 			}
