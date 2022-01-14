@@ -59,20 +59,20 @@ namespace MagicalNuts.BackTest
 
 			// バックテスト
 			DateTime? prev_dt = null;
-			for (BackTestState.DateTime = args.BeginDateTime; BackTestState.DateTime <= args.EndDateTime;
-				BackTestState.DateTime = BackTestState.DateTime.AddDays(1))
+			BackTestState.DateTime = args.BeginDateTime;
+			while (BackTestState.DateTime <= args.EndDateTime)
 			{
 				// 銘柄更新
 				BackTestState.StockCandles = GetDaysStockCandles(args.StockCandles, BackTestState.DateTime);
 
-				// 銘柄が１つも無ければスキップ
-				if (BackTestState.StockCandles.Length == 0) continue;
+				if (BackTestState.StockCandles.Length > 0)
+				{
+					// 注文処理
+					HandleOrders();
 
-				// 注文処理
-				HandleOrders();
-
-				// シグナル取得
-				args.Strategy.GetOrders(BackTestState, BackTestState.Orders);
+					// シグナル取得
+					args.Strategy.GetOrders(BackTestState, BackTestState.Orders);
+				}
 
 				// 月次手数料
 				if (prev_dt != null && BackTestState.DateTime.Month != prev_dt.Value.Month) PayFee(GetMonthlyFee());
@@ -89,6 +89,9 @@ namespace MagicalNuts.BackTest
 
 				Debug.WriteLine(BackTestState.DateTime.ToShortDateString());
 				prev_dt = BackTestState.DateTime;
+
+				// 次の時間へ
+				BackTestState.DateTime = BackTestCandleCollection.GetNextCandleDateTime(prev_dt.Value, new PeriodInfo(PeriodUnit.Day, 1));
 			}
 
 			// 清算

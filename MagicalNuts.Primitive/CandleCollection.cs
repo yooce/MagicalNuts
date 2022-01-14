@@ -190,7 +190,7 @@ namespace MagicalNuts.Primitive
 		/// <param name="prevDateTime">前のロウソク足の日時</param>
 		/// <param name="pi">期間情報</param>
 		/// <returns>次のロウソク足の日時</returns>
-		private static DateTime GetNextCandleDateTime(DateTime prevDateTime, PeriodInfo pi)
+		public static DateTime GetNextCandleDateTime(DateTime prevDateTime, PeriodInfo pi)
 		{
 			DateTime nextDateTime = DateTime.MinValue;
 			switch (pi.Unit)
