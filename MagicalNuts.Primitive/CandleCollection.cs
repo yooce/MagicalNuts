@@ -178,6 +178,9 @@ namespace MagicalNuts.Primitive
 				prevDateTime = candle.DateTime;
 			}
 
+			// 最後のロウソク足追加
+			if (converted != null) converteds.Add(converted);
+
 			return new CandleCollection<T>(converteds, Additional, pi.Unit, pi.Period);
 		}
 

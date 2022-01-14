@@ -91,6 +91,11 @@ namespace MagicalNuts.UI.TradingChart
 		}
 
 		/// <summary>
+		/// 表示する最大ロウソク足の下図を設定します。
+		/// </summary>
+		public int? MaxCandlesNum { private get; set; } = 10000;
+
+		/// <summary>
 		/// 期間情報
 		/// </summary>
 		private PeriodInfo _PeriodInfo = new PeriodInfo(PeriodUnit.Day, 1);
@@ -222,6 +227,11 @@ namespace MagicalNuts.UI.TradingChart
 
 			// 期間変換
 			DisplayCandles = BaseCandles.ConvertPeriod(PeriodInfo);
+
+			// 足数制限
+			if (MaxCandlesNum != null && DisplayCandles.Count > MaxCandlesNum) DisplayCandles = new CandleCollection<string>(
+				DisplayCandles.GetRange(DisplayCandles.Count - MaxCandlesNum.Value, MaxCandlesNum.Value), DisplayCandles.Additional, DisplayCandles.PeriodInfo.Unit
+				, DisplayCandles.PeriodInfo.Period);
 
 			// 主ChartArea
 			MainChartArea.SetCandles(DisplayCandles, PriceFormatter.GetDigitsFromFormat(PriceFormat).Value);
