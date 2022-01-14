@@ -22,6 +22,7 @@ namespace MagicalNuts.UI.TradingChart
 		/// <param name="daily">日足</param>
 		/// <param name="period">目的のロウソク足の期間</param>
 		/// <returns>目的のロウソク足のリスト</returns>
+		[Obsolete("代わりに 'CandleCollection.ConvertPeriod()' を使用します。")]
 		public static List<Primitive.Candle> ConvertFromDaily(List<Primitive.Candle> daily, CandlePeriod period)
 		{
 			// ソート
