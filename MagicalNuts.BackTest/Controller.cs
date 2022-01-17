@@ -87,11 +87,11 @@ namespace MagicalNuts.BackTest
 				BackTestState.HistoricalAssetsList.Add(new HistoricalAssets(BackTestState.DateTime, BackTestState.BookAssets
 					, BackTestState.MarketAssets, BackTestState.InvestmentAmount));
 
-				Debug.WriteLine(BackTestState.DateTime.ToShortDateString());
+				Debug.WriteLine(BackTestState.DateTime.ToString());
 				prev_dt = BackTestState.DateTime;
 
 				// 次の時間へ
-				BackTestState.DateTime = BackTestCandleCollection.GetNextCandleDateTime(prev_dt.Value, new PeriodInfo(PeriodUnit.Day, 1));
+				BackTestState.DateTime = BackTestCandleCollection.GetNextCandleDateTime(prev_dt.Value, args.PeriodInfo);
 			}
 
 			// 清算
@@ -379,7 +379,7 @@ namespace MagicalNuts.BackTest
 		/// <param name="currency">為替</param>
 		/// <param name="unit">単元数</param>
 		/// <returns>調整済みロット数</returns>
-		private decimal GetAdjustedLots(decimal price, decimal lots, decimal currency, int unit)
+		private decimal GetAdjustedLots(decimal price, decimal lots, decimal currency, decimal unit)
 		{
 			while (lots > 0)
 			{
