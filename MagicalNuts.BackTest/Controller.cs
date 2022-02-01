@@ -669,8 +669,8 @@ namespace MagicalNuts.BackTest
 
 			// 価格の決定
 			decimal? price = null;
-			if (candles[0].Open <= price.Value) price = candles[0].Open;
-			else if (candles[0].Low < price.Value) price = order.Price.Value;
+			if (candles[0].Open <= order.Price.Value) price = candles[0].Open;
+			else if (candles[0].Low < order.Price.Value) price = order.Price.Value;
 			if (price == null) return false;
 
 			// 為替
