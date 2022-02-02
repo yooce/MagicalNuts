@@ -29,11 +29,6 @@ namespace MagicalNuts.BackTest
 		private IFeeCalculator FeeCalculator = null;
 
 		/// <summary>
-		/// 通貨の小数点以下の桁数
-		/// </summary>
-		private int CurrencyDigits = 0;
-
-		/// <summary>
 		/// 非同期でバックテストをします。
 		/// </summary>
 		/// <typeparam name="T">戻り値の型</typeparam>
@@ -54,10 +49,9 @@ namespace MagicalNuts.BackTest
 			StrategyProperties properties = (StrategyProperties)args.Strategy.Properties;
 
 			// メンバー作成
-			BackTestState = new BackTestStatus(properties.InitialAssets, args.CurrencyStore, properties.Leverage);
+			BackTestState = new BackTestStatus(properties.InitialAssets, args.CurrencyStore, args.CurrencyDigits, properties.Leverage);
 			StockCandlesDictionary = args.StockCandles.ToDictionary(candles => candles.Stock.Code);
 			FeeCalculator = args.FeeCalculator;
-			CurrencyDigits = args.CurrencyDigits;
 
 			// バックテスト
 			DateTime? prev_dt = null;
@@ -245,7 +239,7 @@ namespace MagicalNuts.BackTest
 		private decimal GetEntryFee(decimal price, decimal lots, decimal currency)
 		{
 			// 切り上げ
-			return MathEx.Ceiling(FeeCalculator.GetEntryFee(BackTestState, price, lots, currency), CurrencyDigits);
+			return MathEx.Ceiling(FeeCalculator.GetEntryFee(BackTestState, price, lots, currency), BackTestState.CurrencyDigits);
 		}
 
 		/// <summary>
@@ -258,7 +252,7 @@ namespace MagicalNuts.BackTest
 		private decimal GetExitFee(decimal price, decimal lots, decimal currency)
 		{
 			// 切り上げ
-			return MathEx.Ceiling(FeeCalculator.GetExitFee(BackTestState, price, lots, currency), CurrencyDigits);
+			return MathEx.Ceiling(FeeCalculator.GetExitFee(BackTestState, price, lots, currency), BackTestState.CurrencyDigits);
 		}
 
 		/// <summary>
@@ -268,7 +262,7 @@ namespace MagicalNuts.BackTest
 		private decimal GetMonthlyFee()
 		{
 			// 切り上げ
-			return MathEx.Ceiling(FeeCalculator.GetMonthlyFee(BackTestState), CurrencyDigits);
+			return MathEx.Ceiling(FeeCalculator.GetMonthlyFee(BackTestState), BackTestState.CurrencyDigits);
 		}
 
 		/// <summary>
@@ -278,7 +272,7 @@ namespace MagicalNuts.BackTest
 		private decimal GetYearlyFee()
 		{
 			// 切り上げ
-			return MathEx.Ceiling(FeeCalculator.GetYearlyFee(BackTestState), CurrencyDigits);
+			return MathEx.Ceiling(FeeCalculator.GetYearlyFee(BackTestState), BackTestState.CurrencyDigits);
 		}
 
 		/// <summary>
@@ -291,7 +285,7 @@ namespace MagicalNuts.BackTest
 		private decimal GetEntryExecutionAmount(decimal price, decimal lots, decimal currency)
 		{
 			// 切り上げ
-			return MathEx.Ceiling(price * lots * currency, CurrencyDigits);
+			return MathEx.Ceiling(price * lots * currency, BackTestState.CurrencyDigits);
 		}
 
 		/// <summary>
@@ -304,7 +298,7 @@ namespace MagicalNuts.BackTest
 		private decimal GetExitExecutionAmount(decimal price, decimal lots, decimal currency)
 		{
 			// 切り下げ
-			return MathEx.Floor(price * lots * currency, CurrencyDigits);
+			return MathEx.Floor(price * lots * currency, BackTestState.CurrencyDigits);
 		}
 
 		#endregion

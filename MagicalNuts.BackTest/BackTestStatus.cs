@@ -70,6 +70,11 @@ namespace MagicalNuts.BackTest
 		public CurrencyStore CurrencyStore { get; set; }
 
 		/// <summary>
+		/// 通貨の小数点以下の桁数
+		/// </summary>
+		public int CurrencyDigits = 0;
+
+		/// <summary>
 		/// レバレッジ
 		/// </summary>
 		public decimal Leverage { get; set; }
@@ -118,7 +123,7 @@ namespace MagicalNuts.BackTest
 		/// <param name="initial">初期資産</param>
 		/// <param name="currencyStore">為替ストア</param>
 		/// <param name="leverage">レバレッジ</param>
-		public BackTestStatus(decimal initial, CurrencyStore currencyStore, decimal leverage = 1)
+		public BackTestStatus(decimal initial, CurrencyStore currencyStore, int digits = 0, decimal leverage = 1)
 		{
 			InitialAssets = initial;
 			BookAssets = initial;
@@ -130,6 +135,7 @@ namespace MagicalNuts.BackTest
 			HistoricalPositions = new List<Position>();
 			HistoricalAssetsList = new List<HistoricalAssets>();
 			CurrencyStore = currencyStore;
+			CurrencyDigits = digits;
 			if (CurrencyStore == null) CurrencyStore = new CurrencyStore();
 			Leverage = leverage;
 		}
