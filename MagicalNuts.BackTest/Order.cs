@@ -220,12 +220,12 @@ namespace MagicalNuts.BackTest
 		/// <param name="price">逆指値</param>
 		/// <param name="position">手仕舞いするポジション</param>
 		/// <returns>手仕舞い逆指値売り注文</returns>
-		public static Order GetSellStopOrder(Stock stock, decimal price, Position position)
+		public static Order GetSellStopOrder(decimal price, Position position)
 		{
 			// ロングしか受け付けない
 			if (position.PositionDirection != PositionDirection.Long) return null;
 
-			return new Order(stock, OrderType.SellStop, null, price, position, null);
+			return new Order(position.Stock, OrderType.SellStop, null, price, position, null);
 		}
 	}
 }
