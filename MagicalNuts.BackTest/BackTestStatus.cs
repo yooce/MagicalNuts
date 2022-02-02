@@ -70,6 +70,11 @@ namespace MagicalNuts.BackTest
 		public CurrencyStore CurrencyStore { get; set; }
 
 		/// <summary>
+		/// レバレッジ
+		/// </summary>
+		public decimal Leverage { get; set; }
+
+		/// <summary>
 		/// 単独銘柄を対象とした戦略用ロウソク足の集合
 		/// </summary>
 		public StrategyCandleCollection Candles
@@ -112,7 +117,8 @@ namespace MagicalNuts.BackTest
 		/// </summary>
 		/// <param name="initial">初期資産</param>
 		/// <param name="currencyStore">為替ストア</param>
-		public BackTestStatus(decimal initial, CurrencyStore currencyStore)
+		/// <param name="leverage">レバレッジ</param>
+		public BackTestStatus(decimal initial, CurrencyStore currencyStore, decimal leverage = 1)
 		{
 			InitialAssets = initial;
 			BookAssets = initial;
@@ -125,6 +131,7 @@ namespace MagicalNuts.BackTest
 			HistoricalAssetsList = new List<HistoricalAssets>();
 			CurrencyStore = currencyStore;
 			if (CurrencyStore == null) CurrencyStore = new CurrencyStore();
+			Leverage = leverage;
 		}
 
 		/// <summary>

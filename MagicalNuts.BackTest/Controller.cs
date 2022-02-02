@@ -51,8 +51,10 @@ namespace MagicalNuts.BackTest
 		/// <returns>バックテスト結果</returns>
 		protected virtual T BackTest<T>(Arguments args) where T : BackTestResult, new()
 		{
+			StrategyProperties properties = (StrategyProperties)args.Strategy.Properties;
+
 			// メンバー作成
-			BackTestState = new BackTestStatus(((StrategyProperties)args.Strategy.Properties).InitialAssets, args.CurrencyStore);
+			BackTestState = new BackTestStatus(properties.InitialAssets, args.CurrencyStore, properties.Leverage);
 			StockCandlesDictionary = args.StockCandles.ToDictionary(candles => candles.Stock.Code);
 			FeeCalculator = args.FeeCalculator;
 			CurrencyDigits = args.CurrencyDigits;
@@ -135,7 +137,7 @@ namespace MagicalNuts.BackTest
 			// ここではMarketAssetsの更新はしない
 
 			BackTestState.BookAssets -= position.EntryExecution.Fee;
-			BackTestState.NetBalance -= position.EntryExecution.Amount + position.EntryExecution.Fee;
+			BackTestState.NetBalance -= position.EntryExecution.Amount / BackTestState.Leverage + position.EntryExecution.Fee;
 			BackTestState.ActivePositions.Add(position);
 		}
 
@@ -148,7 +150,7 @@ namespace MagicalNuts.BackTest
 			// ここではMarketAssetsの更新はしない
 
 			BackTestState.BookAssets += position.Return.Value + position.EntryExecution.Fee; // エントリー時の手数料を足し戻す
-			BackTestState.NetBalance += position.ExitExecution.Amount - position.ExitExecution.Fee;
+			BackTestState.NetBalance += position.ExitExecution.Amount / BackTestState.Leverage - position.ExitExecution.Fee;
 			BackTestState.ActivePositions.Remove(position);
 			BackTestState.HistoricalPositions.Add(position);
 		}
@@ -387,7 +389,7 @@ namespace MagicalNuts.BackTest
 				decimal clear = GetEntryExecutionAmount(price, lots, currency) + GetEntryFee(price, lots, currency);
 
 				// 資金充足
-				if (BackTestState.NetBalance >= clear) return lots;
+				if (BackTestState.NetBalance * BackTestState.Leverage >= clear) return lots;
 
 				// 資金不足
 				lots -= unit;

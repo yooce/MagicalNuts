@@ -49,6 +49,11 @@ namespace MagicalNuts.BackTest
 		public int CurrencyDigits { get; set; }
 
 		/// <summary>
+		/// レバレッジ
+		/// </summary>
+		public decimal Leverage { get; set; }
+
+		/// <summary>
 		/// Argumentsクラスの新しいインスタンスを初期化します。
 		/// </summary>
 		/// <param name="strategy">戦略</param>
@@ -57,8 +62,9 @@ namespace MagicalNuts.BackTest
 		/// <param name="end">終了日時</param>
 		/// <param name="unit">期間単位</param>
 		/// <param name="period">期間</param>
-		public Arguments(IStrategy strategy, BackTestCandleCollection candles, DateTime begin, DateTime end, PeriodUnit unit = PeriodUnit.Day, int period = 1)
-			: this(strategy, new BackTestCandleCollection[] { candles }, begin, end, unit, period)
+		/// <param name="leverage">レバレッジ</param>
+		public Arguments(IStrategy strategy, BackTestCandleCollection candles, DateTime begin, DateTime end, PeriodUnit unit = PeriodUnit.Day, int period = 1
+			, decimal leverage = 1) : this(strategy, new BackTestCandleCollection[] { candles }, begin, end, unit, period, leverage)
 		{
 		}
 
@@ -72,8 +78,9 @@ namespace MagicalNuts.BackTest
 		/// <param name="fc">手数料計算機</param>
 		/// <param name="unit">期間単位</param>
 		/// <param name="period">期間</param>
-		public Arguments(IStrategy strategy, BackTestCandleCollection candles, DateTime begin, DateTime end, IFeeCalculator fc, PeriodUnit unit = PeriodUnit.Day, int period = 1)
-			: this(strategy, new BackTestCandleCollection[] { candles }, begin, end, fc, unit, period)
+		/// <param name="leverage">レバレッジ</param>
+		public Arguments(IStrategy strategy, BackTestCandleCollection candles, DateTime begin, DateTime end, IFeeCalculator fc, PeriodUnit unit = PeriodUnit.Day
+			, int period = 1, decimal leverage = 1) : this(strategy, new BackTestCandleCollection[] { candles }, begin, end, fc, unit, period, leverage)
 		{
 		}
 
@@ -87,8 +94,9 @@ namespace MagicalNuts.BackTest
 		/// <param name="cs">為替ストア</param>
 		/// <param name="unit">期間単位</param>
 		/// <param name="period">期間</param>
-		public Arguments(IStrategy strategy, BackTestCandleCollection candles, DateTime begin, DateTime end, CurrencyStore cs, PeriodUnit unit = PeriodUnit.Day, int period = 1)
-			: this(strategy, new BackTestCandleCollection[] { candles }, begin, end, cs, unit, period)
+		/// <param name="leverage">レバレッジ</param>
+		public Arguments(IStrategy strategy, BackTestCandleCollection candles, DateTime begin, DateTime end, CurrencyStore cs, PeriodUnit unit = PeriodUnit.Day
+			, int period = 1, decimal leverage = 1) : this(strategy, new BackTestCandleCollection[] { candles }, begin, end, cs, unit, period, leverage)
 		{
 		}
 
@@ -103,8 +111,10 @@ namespace MagicalNuts.BackTest
 		/// <param name="cs">為替ストア</param>
 		/// <param name="unit">期間単位</param>
 		/// <param name="period">期間</param>
-		public Arguments(IStrategy strategy, BackTestCandleCollection candles, DateTime begin, DateTime end, IFeeCalculator fc, CurrencyStore cs, PeriodUnit unit = PeriodUnit.Day, int period = 1)
-			: this(strategy, new BackTestCandleCollection[] { candles }, begin, end, fc, cs, unit, period)
+		/// <param name="leverage">レバレッジ</param>
+		public Arguments(IStrategy strategy, BackTestCandleCollection candles, DateTime begin, DateTime end, IFeeCalculator fc, CurrencyStore cs
+			, PeriodUnit unit = PeriodUnit.Day, int period = 1, decimal leverage = 1)
+			: this(strategy, new BackTestCandleCollection[] { candles }, begin, end, fc, cs, unit, period, leverage)
 		{
 		}
 
@@ -117,7 +127,9 @@ namespace MagicalNuts.BackTest
 		/// <param name="end">終了日時</param>
 		/// <param name="unit">期間単位</param>
 		/// <param name="period">期間</param>
-		public Arguments(IStrategy strategy, BackTestCandleCollection[] candles, DateTime begin, DateTime end, PeriodUnit unit = PeriodUnit.Day, int period = 1)
+		/// <param name="leverage">レバレッジ</param>
+		public Arguments(IStrategy strategy, BackTestCandleCollection[] candles, DateTime begin, DateTime end, PeriodUnit unit = PeriodUnit.Day, int period = 1
+			, decimal leverage = 1)
 		{
 			Strategy = strategy;
 			StockCandles = candles;
@@ -125,6 +137,7 @@ namespace MagicalNuts.BackTest
 			EndDateTime = end;
 			FeeCalculator = new FeeCalculatorNone();
 			PeriodInfo = new PeriodInfo(unit, period);
+			Leverage = leverage;
 		}
 
 		/// <summary>
@@ -137,8 +150,9 @@ namespace MagicalNuts.BackTest
 		/// <param name="fc">手数料計算機</param>
 		/// <param name="unit">期間単位</param>
 		/// <param name="period">期間</param>
-		public Arguments(IStrategy strategy, BackTestCandleCollection[] candles, DateTime begin, DateTime end, IFeeCalculator fc, PeriodUnit unit = PeriodUnit.Day, int period = 1)
-			: this(strategy, candles, begin, end, unit, period)
+		/// <param name="leverage">レバレッジ</param>
+		public Arguments(IStrategy strategy, BackTestCandleCollection[] candles, DateTime begin, DateTime end, IFeeCalculator fc, PeriodUnit unit = PeriodUnit.Day
+			, int period = 1, decimal leverage = 1) : this(strategy, candles, begin, end, unit, period, leverage)
 		{
 			FeeCalculator = fc;
 		}
@@ -153,8 +167,9 @@ namespace MagicalNuts.BackTest
 		/// <param name="cs">為替ストア</param>
 		/// <param name="unit">期間単位</param>
 		/// <param name="period">期間</param>
-		public Arguments(IStrategy strategy, BackTestCandleCollection[] candles, DateTime begin, DateTime end, CurrencyStore cs, PeriodUnit unit = PeriodUnit.Day, int period = 1)
-			: this(strategy, candles, begin, end, unit, period)
+		/// <param name="leverage">レバレッジ</param>
+		public Arguments(IStrategy strategy, BackTestCandleCollection[] candles, DateTime begin, DateTime end, CurrencyStore cs, PeriodUnit unit = PeriodUnit.Day
+			, int period = 1, decimal leverage = 1) : this(strategy, candles, begin, end, unit, period, leverage)
 		{
 			CurrencyStore = cs;
 		}
@@ -170,8 +185,9 @@ namespace MagicalNuts.BackTest
 		/// <param name="cs">為替ストア</param>
 		/// <param name="unit">期間単位</param>
 		/// <param name="period">期間</param>
-		public Arguments(IStrategy strategy, BackTestCandleCollection[] candles, DateTime begin, DateTime end, IFeeCalculator fc, CurrencyStore cs, PeriodUnit unit = PeriodUnit.Day, int period = 1)
-			: this(strategy, candles, begin, end, unit, period)
+		/// <param name="leverage">レバレッジ</param>
+		public Arguments(IStrategy strategy, BackTestCandleCollection[] candles, DateTime begin, DateTime end, IFeeCalculator fc, CurrencyStore cs
+			, PeriodUnit unit = PeriodUnit.Day, int period = 1, decimal leverage = 1) : this(strategy, candles, begin, end, unit, period, leverage)
 		{
 			FeeCalculator = fc;
 			CurrencyStore = cs;
