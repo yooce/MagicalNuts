@@ -310,10 +310,10 @@ namespace MagicalNuts.BackTest
 		/// </summary>
 		private void HandleOrders()
 		{
-			// 不正注文（ロット数０以下またはイグジット済み）を削除
+			// キャンセル分と不正注文（ロット数０以下またはイグジット済み）を削除
 			for (int i = BackTestState.Orders.Count - 1; i >= 0; i--)
 			{
-				if (BackTestState.Orders[i].Lots <= 0
+				if (BackTestState.Orders[i].Cancel || BackTestState.Orders[i].Lots <= 0
 					|| (BackTestState.Orders[i].PositionToClose != null && BackTestState.Orders[i].PositionToClose.IsExited))
 					BackTestState.Orders.RemoveAt(i);
 			}
@@ -436,7 +436,7 @@ namespace MagicalNuts.BackTest
 					price,
 					GetExitExecutionAmount(price, order.PositionToClose.Lots, currency),
 					GetExitFee(price, order.PositionToClose.Lots, currency),
-					(BackTestState.DateTime - order.PositionToClose.EntryDateTime).Days);
+					(BackTestState.DateTime - order.PositionToClose.EntryDateTime.Value).Days);
 				ExitPosition(order.PositionToClose);
 			}
 
@@ -539,7 +539,7 @@ namespace MagicalNuts.BackTest
 					price.Value,
 					GetExitExecutionAmount(price.Value, order.PositionToClose.Lots, currency),
 					GetExitFee(price.Value, order.PositionToClose.Lots, currency),
-					(BackTestState.DateTime - order.PositionToClose.EntryDateTime).Days);
+					(BackTestState.DateTime - order.PositionToClose.EntryDateTime.Value).Days);
 				ExitPosition(order.PositionToClose);
 			}
 
@@ -592,7 +592,7 @@ namespace MagicalNuts.BackTest
 					price.Value,
 					GetExitExecutionAmount(price.Value, order.PositionToClose.Lots, currency),
 					GetExitFee(price.Value, order.PositionToClose.Lots, currency),
-					(BackTestState.DateTime - order.PositionToClose.EntryDateTime).Days);
+					(BackTestState.DateTime - order.PositionToClose.EntryDateTime.Value).Days);
 				ExitPosition(order.PositionToClose);
 			}
 

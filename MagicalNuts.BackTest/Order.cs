@@ -51,6 +51,18 @@ namespace MagicalNuts.BackTest
 		public object Additional { get; set; }
 
 		/// <summary>
+		/// キャンセルするかどうか
+		/// </summary>
+		public bool Cancel { get; set; }
+
+		/// <summary>
+		/// Orderクラスの新しいインスタンスを初期化します。（シリアライザーのためのコンストラクタなので使用非推奨）
+		/// </summary>
+		public Order()
+		{
+		}
+
+		/// <summary>
 		/// Orderクラスの新しいインスタンスを初期化します。
 		/// </summary>
 		/// <param name="stock">銘柄情報</param>

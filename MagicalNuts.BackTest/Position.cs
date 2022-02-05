@@ -81,12 +81,12 @@ namespace MagicalNuts.BackTest
 		/// <summary>
 		/// エントリー日時
 		/// </summary>
-		public DateTime EntryDateTime => EntryExecution.DateTime;
+		public DateTime? EntryDateTime => EntryExecution == null ? (DateTime?)null : EntryExecution.DateTime;
 
 		/// <summary>
 		/// エントリー価格
 		/// </summary>
-		public decimal EntryPrice => EntryExecution.Price;
+		public decimal? EntryPrice => EntryExecution == null ? (decimal?)null : EntryExecution.Price;
 
 		/// <summary>
 		/// イグジット日時
@@ -117,6 +117,13 @@ namespace MagicalNuts.BackTest
 		/// </summary>
 		[Browsable(false)]
 		public bool IsLose => Return != null && Return.Value < 0;
+
+		/// <summary>
+		/// Positionクラスの新しいインスタンスを初期化します。（シリアライザーのためのコンストラクタなので使用非推奨）
+		/// </summary>
+		public Position()
+		{
+		}
 
 		/// <summary>
 		/// Positionクラスの新しいインスタンスを初期化します。
