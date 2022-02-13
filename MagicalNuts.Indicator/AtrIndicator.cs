@@ -38,7 +38,7 @@ namespace MagicalNuts.Indicator
 		/// 非同期で準備します。
 		/// </summary>
 		/// <returns>非同期タスク</returns>
-		public async Task SetUpAsync()
+		public virtual async Task SetUpAsync()
 		{
 			MovingAverageCalculator = new MovingAverageCalculator();
 		}
