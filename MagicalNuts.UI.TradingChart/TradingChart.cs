@@ -19,6 +19,7 @@ namespace MagicalNuts.UI.TradingChart
 		/// <summary>
 		/// ロウソク足の期間を取得または設定します。
 		/// </summary>
+		[Obsolete("代わりに 'PeriodInfo' を使用します。")]
 		public CandlePeriod CandlePeriod
 		{
 			get
