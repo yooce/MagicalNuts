@@ -41,6 +41,11 @@ namespace MagicalNuts.BackTest
 		public decimal? Price { get; set; }
 
 		/// <summary>
+		/// ストップロス
+		/// </summary>
+		public decimal? StopLoss { get; set; }
+
+		/// <summary>
 		/// 手仕舞いするポジション
 		/// </summary>
 		public Position PositionToClose { get; set; }
@@ -71,7 +76,8 @@ namespace MagicalNuts.BackTest
 		/// <param name="price">指値または逆指値</param>
 		/// <param name="position">手仕舞いするポジション</param>
 		/// <param name="additional">追加情報</param>
-		private Order(Stock stock, OrderType ot, decimal? lots, decimal? price, Position position, object additional)
+		/// <param name="stoploss">ストップロス</param>
+		private Order(Stock stock, OrderType ot, decimal? lots, decimal? price, Position position, object additional, decimal? stoploss)
 		{
 			Stock = stock;
 			OrderType = ot;
@@ -79,6 +85,7 @@ namespace MagicalNuts.BackTest
 			Price = price;
 			PositionToClose = position;
 			Additional = additional;
+			StopLoss = stoploss;
 		}
 
 		/// <summary>
@@ -87,10 +94,11 @@ namespace MagicalNuts.BackTest
 		/// <param name="stock">銘柄情報</param>
 		/// <param name="lots">ロット数</param>
 		/// <param name="additional">追加情報</param>
+		/// <param name="stoploss">ストップロス</param>
 		/// <returns>新規成行買い注文</returns>
-		public static Order GetBuyMarketOrder(Stock stock, decimal lots, object additional = null)
+		public static Order GetBuyMarketOrder(Stock stock, decimal lots, object additional = null, decimal? stoploss = null)
 		{
-			return new Order(stock, OrderType.BuyMarket, lots, null, null, additional);
+			return new Order(stock, OrderType.BuyMarket, lots, null, null, additional, stoploss);
 		}
 
 		/// <summary>
@@ -103,7 +111,7 @@ namespace MagicalNuts.BackTest
 			// ショートしか受け付けない
 			if (position.PositionDirection != PositionDirection.Short) return null;
 
-			return new Order(position.Stock, OrderType.BuyMarket, null, null, position, null);
+			return new Order(position.Stock, OrderType.BuyMarket, null, null, position, null, null);
 		}
 
 		/// <summary>
@@ -112,10 +120,11 @@ namespace MagicalNuts.BackTest
 		/// <param name="stock">銘柄情報</param>
 		/// <param name="lots">ロット数</param>
 		/// <param name="additional">追加情報</param>
+		/// <param name="stoploss">ストップロス</param>
 		/// <returns>信用成行売り注文</returns>
-		public static Order GetSellMarketOrder(Stock stock, decimal lots, object additional = null)
+		public static Order GetSellMarketOrder(Stock stock, decimal lots, object additional = null, decimal? stoploss = null)
 		{
-			return new Order(stock, OrderType.SellMarket, lots, null, null, additional);
+			return new Order(stock, OrderType.SellMarket, lots, null, null, additional, stoploss);
 		}
 
 		/// <summary>
@@ -128,7 +137,7 @@ namespace MagicalNuts.BackTest
 			// ロングしか受け付けない
 			if (position.PositionDirection != PositionDirection.Long) return null;
 
-			return new Order(position.Stock, OrderType.SellMarket, null, null, position, null);
+			return new Order(position.Stock, OrderType.SellMarket, null, null, position, null, null);
 		}
 
 		/// <summary>
@@ -138,10 +147,11 @@ namespace MagicalNuts.BackTest
 		/// <param name="lots">ロット数</param>
 		/// <param name="price">指値</param>
 		/// <param name="additional">追加情報</param>
+		/// <param name="stoploss">ストップロス</param>
 		/// <returns>新規指値買い注文</returns>
-		public static Order GetBuyLimitOrder(Stock stock, decimal lots, decimal price, object additional = null)
+		public static Order GetBuyLimitOrder(Stock stock, decimal lots, decimal price, object additional = null, decimal? stoploss = null)
 		{
-			return new Order(stock, OrderType.BuyLimit, lots, price, null, additional);
+			return new Order(stock, OrderType.BuyLimit, lots, price, null, additional, stoploss);
 		}
 
 		/// <summary>
@@ -155,7 +165,7 @@ namespace MagicalNuts.BackTest
 			// ショートしか受け付けない
 			if (position.PositionDirection != PositionDirection.Short) return null;
 
-			return new Order(position.Stock, OrderType.BuyLimit, null, price, position, null);
+			return new Order(position.Stock, OrderType.BuyLimit, null, price, position, null, null);
 		}
 
 		/// <summary>
@@ -165,10 +175,11 @@ namespace MagicalNuts.BackTest
 		/// <param name="lots">ロット数</param>
 		/// <param name="price">指値</param>
 		/// <param name="additional">追加情報</param>
+		/// <param name="stoploss">ストップロス</param>
 		/// <returns>信用指値売り注文</returns>
-		public static Order GetSellLimitOrder(Stock stock, decimal lots, decimal price, object additional = null)
+		public static Order GetSellLimitOrder(Stock stock, decimal lots, decimal price, object additional = null, decimal? stoploss = null)
 		{
-			return new Order(stock, OrderType.SellLimit, lots, price, null, additional);
+			return new Order(stock, OrderType.SellLimit, lots, price, null, additional, stoploss);
 		}
 
 		/// <summary>
@@ -182,7 +193,7 @@ namespace MagicalNuts.BackTest
 			// ロングしか受け付けない
 			if (position.PositionDirection != PositionDirection.Long) return null;
 
-			return new Order(position.Stock, OrderType.SellLimit, null, price, position, null);
+			return new Order(position.Stock, OrderType.SellLimit, null, price, position, null, null);
 		}
 
 		/// <summary>
@@ -192,10 +203,11 @@ namespace MagicalNuts.BackTest
 		/// <param name="lots">ロット数</param>
 		/// <param name="price">逆指値</param>
 		/// <param name="additional">追加情報</param>
+		/// <param name="stoploss">ストップロス</param>
 		/// <returns>新規逆指値買い注文</returns>
-		public static Order GetBuyStopOrder(Stock stock, decimal lots, decimal price, object additional = null)
+		public static Order GetBuyStopOrder(Stock stock, decimal lots, decimal price, object additional = null, decimal? stoploss = null)
 		{
-			return new Order(stock, OrderType.BuyStop, lots, price, null, additional);
+			return new Order(stock, OrderType.BuyStop, lots, price, null, additional, stoploss);
 		}
 
 		/// <summary>
@@ -209,7 +221,7 @@ namespace MagicalNuts.BackTest
 			// ショートしか受け付けない
 			if (position.PositionDirection != PositionDirection.Short) return null;
 
-			return new Order(position.Stock, OrderType.BuyStop, null, price, position, null);
+			return new Order(position.Stock, OrderType.BuyStop, null, price, position, null, null);
 		}
 
 		/// <summary>
@@ -219,10 +231,11 @@ namespace MagicalNuts.BackTest
 		/// <param name="lots">ロット数</param>
 		/// <param name="price">逆指値</param>
 		/// <param name="additional">追加情報</param>
+		/// <param name="stoploss">ストップロス</param>
 		/// <returns>信用逆指値売り注文</returns>
-		public static Order GetSellStopOrder(Stock stock, decimal lots, decimal price, object additional = null)
+		public static Order GetSellStopOrder(Stock stock, decimal lots, decimal price, object additional = null, decimal? stoploss = null)
 		{
-			return new Order(stock, OrderType.SellStop, lots, price, null, additional);
+			return new Order(stock, OrderType.SellStop, lots, price, null, additional, stoploss);
 		}
 
 		/// <summary>
@@ -237,7 +250,7 @@ namespace MagicalNuts.BackTest
 			// ロングしか受け付けない
 			if (position.PositionDirection != PositionDirection.Long) return null;
 
-			return new Order(position.Stock, OrderType.SellStop, null, price, position, null);
+			return new Order(position.Stock, OrderType.SellStop, null, price, position, null, null);
 		}
 	}
 }
