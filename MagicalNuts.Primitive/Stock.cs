@@ -24,7 +24,7 @@ namespace MagicalNuts.Primitive
 		/// 単元数
 		/// </summary>
 		[Key(2)]
-		public int Unit { get; set; }
+		public decimal Unit { get; set; }
 
 		/// <summary>
 		/// 市場の種類
@@ -46,7 +46,7 @@ namespace MagicalNuts.Primitive
 		/// <param name="name">銘柄名</param>
 		/// <param name="unit">単元数</param>
 		/// <param name="mt">市場の種類</param>
-		public Stock(string code, string name = null, int unit = 1, int mt = 0)
+		public Stock(string code, string name = null, decimal unit = 1, int mt = 0)
 		{
 			Code = code;
 			Name = name;

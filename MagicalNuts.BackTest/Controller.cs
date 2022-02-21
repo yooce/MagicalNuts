@@ -29,11 +29,6 @@ namespace MagicalNuts.BackTest
 		private IFeeCalculator FeeCalculator = null;
 
 		/// <summary>
-		/// 通貨の小数点以下の桁数
-		/// </summary>
-		private int CurrencyDigits = 0;
-
-		/// <summary>
 		/// 非同期でバックテストをします。
 		/// </summary>
 		/// <typeparam name="T">戻り値の型</typeparam>
@@ -51,28 +46,29 @@ namespace MagicalNuts.BackTest
 		/// <returns>バックテスト結果</returns>
 		protected virtual T BackTest<T>(Arguments args) where T : BackTestResult, new()
 		{
+			StrategyProperties properties = (StrategyProperties)args.Strategy.Properties;
+
 			// メンバー作成
-			BackTestState = new BackTestStatus(((StrategyProperties)args.Strategy.Properties).InitialAssets, args.CurrencyStore);
+			BackTestState = new BackTestStatus(properties.InitialAssets, args.CurrencyStore, args.CurrencyDigits, properties.Leverage);
 			StockCandlesDictionary = args.StockCandles.ToDictionary(candles => candles.Stock.Code);
 			FeeCalculator = args.FeeCalculator;
-			CurrencyDigits = args.CurrencyDigits;
 
 			// バックテスト
 			DateTime? prev_dt = null;
-			for (BackTestState.DateTime = args.BeginDateTime; BackTestState.DateTime <= args.EndDateTime;
-				BackTestState.DateTime = BackTestState.DateTime.AddDays(1))
+			BackTestState.DateTime = args.BeginDateTime;
+			while (BackTestState.DateTime <= args.EndDateTime)
 			{
 				// 銘柄更新
 				BackTestState.StockCandles = GetDaysStockCandles(args.StockCandles, BackTestState.DateTime);
 
-				// 銘柄が１つも無ければスキップ
-				if (BackTestState.StockCandles.Length == 0) continue;
+				if (BackTestState.StockCandles.Length > 0)
+				{
+					// 注文処理
+					HandleOrders();
 
-				// 注文処理
-				HandleOrders();
-
-				// シグナル取得
-				args.Strategy.GetOrders(BackTestState, BackTestState.Orders);
+					// シグナル取得
+					args.Strategy.GetOrders(BackTestState, BackTestState.Orders);
+				}
 
 				// 月次手数料
 				if (prev_dt != null && BackTestState.DateTime.Month != prev_dt.Value.Month) PayFee(GetMonthlyFee());
@@ -87,8 +83,11 @@ namespace MagicalNuts.BackTest
 				BackTestState.HistoricalAssetsList.Add(new HistoricalAssets(BackTestState.DateTime, BackTestState.BookAssets
 					, BackTestState.MarketAssets, BackTestState.InvestmentAmount));
 
-				Debug.WriteLine(BackTestState.DateTime.ToShortDateString());
+				Debug.WriteLine(BackTestState.DateTime.ToString());
 				prev_dt = BackTestState.DateTime;
+
+				// 次の時間へ
+				BackTestState.DateTime = BackTestCandleCollection.GetNextCandleDateTime(prev_dt.Value, args.PeriodInfo);
 			}
 
 			// 清算
@@ -132,7 +131,7 @@ namespace MagicalNuts.BackTest
 			// ここではMarketAssetsの更新はしない
 
 			BackTestState.BookAssets -= position.EntryExecution.Fee;
-			BackTestState.NetBalance -= position.EntryExecution.Amount + position.EntryExecution.Fee;
+			BackTestState.NetBalance -= position.EntryExecution.Amount / BackTestState.Leverage + position.EntryExecution.Fee;
 			BackTestState.ActivePositions.Add(position);
 		}
 
@@ -145,7 +144,7 @@ namespace MagicalNuts.BackTest
 			// ここではMarketAssetsの更新はしない
 
 			BackTestState.BookAssets += position.Return.Value + position.EntryExecution.Fee; // エントリー時の手数料を足し戻す
-			BackTestState.NetBalance += position.ExitExecution.Amount - position.ExitExecution.Fee;
+			BackTestState.NetBalance += position.ExitExecution.Amount / BackTestState.Leverage - position.ExitExecution.Fee;
 			BackTestState.ActivePositions.Remove(position);
 			BackTestState.HistoricalPositions.Add(position);
 		}
@@ -240,7 +239,7 @@ namespace MagicalNuts.BackTest
 		private decimal GetEntryFee(decimal price, decimal lots, decimal currency)
 		{
 			// 切り上げ
-			return MathEx.Ceiling(FeeCalculator.GetEntryFee(BackTestState, price, lots, currency), CurrencyDigits);
+			return MathEx.Ceiling(FeeCalculator.GetEntryFee(BackTestState, price, lots, currency), BackTestState.CurrencyDigits);
 		}
 
 		/// <summary>
@@ -253,7 +252,7 @@ namespace MagicalNuts.BackTest
 		private decimal GetExitFee(decimal price, decimal lots, decimal currency)
 		{
 			// 切り上げ
-			return MathEx.Ceiling(FeeCalculator.GetExitFee(BackTestState, price, lots, currency), CurrencyDigits);
+			return MathEx.Ceiling(FeeCalculator.GetExitFee(BackTestState, price, lots, currency), BackTestState.CurrencyDigits);
 		}
 
 		/// <summary>
@@ -263,7 +262,7 @@ namespace MagicalNuts.BackTest
 		private decimal GetMonthlyFee()
 		{
 			// 切り上げ
-			return MathEx.Ceiling(FeeCalculator.GetMonthlyFee(BackTestState), CurrencyDigits);
+			return MathEx.Ceiling(FeeCalculator.GetMonthlyFee(BackTestState), BackTestState.CurrencyDigits);
 		}
 
 		/// <summary>
@@ -273,7 +272,7 @@ namespace MagicalNuts.BackTest
 		private decimal GetYearlyFee()
 		{
 			// 切り上げ
-			return MathEx.Ceiling(FeeCalculator.GetYearlyFee(BackTestState), CurrencyDigits);
+			return MathEx.Ceiling(FeeCalculator.GetYearlyFee(BackTestState), BackTestState.CurrencyDigits);
 		}
 
 		/// <summary>
@@ -286,7 +285,7 @@ namespace MagicalNuts.BackTest
 		private decimal GetEntryExecutionAmount(decimal price, decimal lots, decimal currency)
 		{
 			// 切り上げ
-			return MathEx.Ceiling(price * lots * currency, CurrencyDigits);
+			return MathEx.Ceiling(price * lots * currency, BackTestState.CurrencyDigits);
 		}
 
 		/// <summary>
@@ -299,7 +298,7 @@ namespace MagicalNuts.BackTest
 		private decimal GetExitExecutionAmount(decimal price, decimal lots, decimal currency)
 		{
 			// 切り下げ
-			return MathEx.Floor(price * lots * currency, CurrencyDigits);
+			return MathEx.Floor(price * lots * currency, BackTestState.CurrencyDigits);
 		}
 
 		#endregion
@@ -311,10 +310,10 @@ namespace MagicalNuts.BackTest
 		/// </summary>
 		private void HandleOrders()
 		{
-			// 不正注文（ロット数０以下またはイグジット済み）を削除
+			// キャンセル分と不正注文（ロット数０以下またはイグジット済み）を削除
 			for (int i = BackTestState.Orders.Count - 1; i >= 0; i--)
 			{
-				if (BackTestState.Orders[i].Lots <= 0
+				if (BackTestState.Orders[i].Cancel || BackTestState.Orders[i].Lots <= 0
 					|| (BackTestState.Orders[i].PositionToClose != null && BackTestState.Orders[i].PositionToClose.IsExited))
 					BackTestState.Orders.RemoveAt(i);
 			}
@@ -376,7 +375,7 @@ namespace MagicalNuts.BackTest
 		/// <param name="currency">為替</param>
 		/// <param name="unit">単元数</param>
 		/// <returns>調整済みロット数</returns>
-		private decimal GetAdjustedLots(decimal price, decimal lots, decimal currency, int unit)
+		private decimal GetAdjustedLots(decimal price, decimal lots, decimal currency, decimal unit)
 		{
 			while (lots > 0)
 			{
@@ -384,7 +383,7 @@ namespace MagicalNuts.BackTest
 				decimal clear = GetEntryExecutionAmount(price, lots, currency) + GetEntryFee(price, lots, currency);
 
 				// 資金充足
-				if (BackTestState.NetBalance >= clear) return lots;
+				if (BackTestState.NetBalance * BackTestState.Leverage >= clear) return lots;
 
 				// 資金不足
 				lots -= unit;
@@ -437,7 +436,7 @@ namespace MagicalNuts.BackTest
 					price,
 					GetExitExecutionAmount(price, order.PositionToClose.Lots, currency),
 					GetExitFee(price, order.PositionToClose.Lots, currency),
-					(BackTestState.DateTime - order.PositionToClose.EntryDateTime).Days);
+					(BackTestState.DateTime - order.PositionToClose.EntryDateTime.Value).Days);
 				ExitPosition(order.PositionToClose);
 			}
 
@@ -540,7 +539,7 @@ namespace MagicalNuts.BackTest
 					price.Value,
 					GetExitExecutionAmount(price.Value, order.PositionToClose.Lots, currency),
 					GetExitFee(price.Value, order.PositionToClose.Lots, currency),
-					(BackTestState.DateTime - order.PositionToClose.EntryDateTime).Days);
+					(BackTestState.DateTime - order.PositionToClose.EntryDateTime.Value).Days);
 				ExitPosition(order.PositionToClose);
 			}
 
@@ -593,7 +592,7 @@ namespace MagicalNuts.BackTest
 					price.Value,
 					GetExitExecutionAmount(price.Value, order.PositionToClose.Lots, currency),
 					GetExitFee(price.Value, order.PositionToClose.Lots, currency),
-					(BackTestState.DateTime - order.PositionToClose.EntryDateTime).Days);
+					(BackTestState.DateTime - order.PositionToClose.EntryDateTime.Value).Days);
 				ExitPosition(order.PositionToClose);
 			}
 
@@ -666,8 +665,8 @@ namespace MagicalNuts.BackTest
 
 			// 価格の決定
 			decimal? price = null;
-			if (candles[0].Open <= price.Value) price = candles[0].Open;
-			else if (candles[0].Low < price.Value) price = order.Price.Value;
+			if (candles[0].Open <= order.Price.Value) price = candles[0].Open;
+			else if (candles[0].Low < order.Price.Value) price = order.Price.Value;
 			if (price == null) return false;
 
 			// 為替

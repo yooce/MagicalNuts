@@ -19,7 +19,9 @@ namespace MagicalNuts.BackTest
 		/// </summary>
 		/// <param name="stock">銘柄情報</param>
 		/// <param name="candles">ロウソク足の集合</param>
-		public BackTestCandleCollection(List<Candle> candles, Stock stock) : base(candles, stock)
+		/// <param name="unit">期間単位</param>
+		/// <param name="period">期間</param>
+		public BackTestCandleCollection(List<Candle> candles, Stock stock, PeriodUnit unit = PeriodUnit.Day, int period = 1) : base(candles, stock, unit, period)
 		{
 			// インデックスの辞書作成
 			IndexDictionary = new Dictionary<DateTime, int>();

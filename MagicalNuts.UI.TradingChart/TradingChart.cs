@@ -19,12 +19,58 @@ namespace MagicalNuts.UI.TradingChart
 		/// <summary>
 		/// ロウソク足の期間を取得または設定します。
 		/// </summary>
+		[Obsolete("代わりに 'PeriodInfo' を使用します。")]
 		public CandlePeriod CandlePeriod
 		{
-			get => _CandlePeriod;
+			get
+			{
+				switch (PeriodInfo.Unit)
+				{
+					case PeriodUnit.Day:
+						return CandlePeriod.Dayly;
+					case PeriodUnit.Week:
+						return CandlePeriod.Weekly;
+					case PeriodUnit.Month:
+						return CandlePeriod.Monthly;
+					case PeriodUnit.Year:
+						return CandlePeriod.Yearly;
+					default:
+						return CandlePeriod.Dayly;
+				}
+			}
 			set
 			{
-				_CandlePeriod = value;
+				_PeriodInfo.Period = 1;
+				switch (value)
+				{
+					case CandlePeriod.Dayly:
+						_PeriodInfo.Unit = PeriodUnit.Day;
+						break;
+					case CandlePeriod.Weekly:
+						_PeriodInfo.Unit = PeriodUnit.Week;
+						break;
+					case CandlePeriod.Monthly:
+						_PeriodInfo.Unit = PeriodUnit.Month;
+						break;
+					case CandlePeriod.Yearly:
+						_PeriodInfo.Unit = PeriodUnit.Year;
+						break;
+				}
+
+				// すべてをプロット
+				PlotAll();
+			}
+		}
+
+		/// <summary>
+		/// 期間情報
+		/// </summary>
+		public PeriodInfo PeriodInfo
+		{
+			get => _PeriodInfo;
+			set
+			{
+				_PeriodInfo = value;
 
 				// すべてをプロット
 				PlotAll();
@@ -46,9 +92,14 @@ namespace MagicalNuts.UI.TradingChart
 		}
 
 		/// <summary>
-		/// ロウソク足の期間
+		/// 表示する最大ロウソク足の下図を設定します。
 		/// </summary>
-		private CandlePeriod _CandlePeriod = CandlePeriod.Dayly;
+		public int? MaxCandlesNum { private get; set; } = 10000;
+
+		/// <summary>
+		/// 期間情報
+		/// </summary>
+		private PeriodInfo _PeriodInfo = new PeriodInfo(PeriodUnit.Day, 1);
 
 		/// <summary>
 		/// 主ChartArea
@@ -81,19 +132,14 @@ namespace MagicalNuts.UI.TradingChart
 		private bool IsScrolling = false;
 
 		/// <summary>
-		/// 銘柄コード
+		/// 基本のロウソク足の集合
 		/// </summary>
-		private string Code = null;
+		private CandleCollection<string> BaseCandles = null;
 
 		/// <summary>
-		/// 日足のリスト
+		/// 表示中のロウソク足の集合
 		/// </summary>
-		private List<Candle> DailyCandles = null;
-
-		/// <summary>
-		/// 表示中のロウソク足のリスト
-		/// </summary>
-		private List<Candle> DisplayCandles = null;
+		private CandleCollection<string> DisplayCandles = null;
 
 		/// <summary>
 		/// 価格表示フォーマット
@@ -141,23 +187,27 @@ namespace MagicalNuts.UI.TradingChart
 		/// <param name="code">銘柄コード</param>
 		/// <param name="candles">ロウソク足の配列</param>
 		/// <param name="digits">小数点以下の桁数</param>
+		[Obsolete("代わりに 'SetBaseCandles()' を使用します。")]
 		public void SetDailyCandles(string code, Candle[] candles, int digits = 2)
 		{
-			// 銘柄コード
-			Code = code;
+			SetBaseCandles(new CandleCollection<string>(candles.ToList(), code, PeriodUnit.Day, 1), digits);
+		}
 
+		/// <summary>
+		/// 基本のロウソク足の集合を設定します。
+		/// </summary>
+		/// <param name="candles">基本のロウソク足の集合</param>
+		/// <param name="digits">小数点以下の桁数</param>
+		public void SetBaseCandles(CandleCollection<string> candles, int digits = 2)
+		{
 			// 日足設定
-			DailyCandles = new List<Candle>();
-			DailyCandles.AddRange(candles);
+			BaseCandles = candles;
 
 			// 価格表示フォーマット取得
 			PriceFormat = PriceFormatter.GetPriceFormatFromDigits(digits);
 
 			// カーソルインターバル
 			MainChartArea.CursorY.Interval = MainChartArea.GetCursorIntervalFromDigits(digits);
-
-			// 期間変換
-			CandlePeriod = CandlePeriod.Dayly;
 		}
 
 		/// <summary>
@@ -166,7 +216,7 @@ namespace MagicalNuts.UI.TradingChart
 		private void PlotAll()
 		{
 			// 日足が無ければ何もしない
-			if (DailyCandles == null) return;
+			if (BaseCandles == null) return;
 
 			// チャートクリア
 			Series.Clear();
@@ -177,7 +227,12 @@ namespace MagicalNuts.UI.TradingChart
 			}
 
 			// 期間変換
-			DisplayCandles = CandleConverter.ConvertFromDaily(DailyCandles, _CandlePeriod);
+			DisplayCandles = BaseCandles.ConvertPeriod(PeriodInfo);
+
+			// 足数制限
+			if (MaxCandlesNum != null && DisplayCandles.Count > MaxCandlesNum) DisplayCandles = new CandleCollection<string>(
+				DisplayCandles.GetRange(DisplayCandles.Count - MaxCandlesNum.Value, MaxCandlesNum.Value), DisplayCandles.Additional, DisplayCandles.PeriodInfo.Unit
+				, DisplayCandles.PeriodInfo.Period);
 
 			// 主ChartArea
 			MainChartArea.SetCandles(DisplayCandles, PriceFormatter.GetDigitsFromFormat(PriceFormat).Value);
@@ -309,7 +364,7 @@ namespace MagicalNuts.UI.TradingChart
 			}
 
 			// プロット
-			plotter.Plot(Code, DisplayCandles);
+			plotter.Plot(DisplayCandles.Additional, DisplayCandles);
 
 			// Y軸設定更新
 			if (updatey) UpdateAxisYSettings();
@@ -441,18 +496,33 @@ namespace MagicalNuts.UI.TradingChart
 
 			// 次のDateTime算出
 			DateTime nextDateTime = DateTime.MinValue;
-			switch (_CandlePeriod)
+			switch (PeriodInfo.Unit)
 			{
-				case CandlePeriod.Dayly:
+				case PeriodUnit.Second:
+					if (PeriodInfo.Period == 1) nextDateTime = new DateTime(prevDateTime.Value.Year, prevDateTime.Value.Month, prevDateTime.Value.Day
+						, prevDateTime.Value.Hour, prevDateTime.Value.Minute, 1).AddMinutes(1);
+					else nextDateTime = new DateTime(prevDateTime.Value.Year, prevDateTime.Value.Month, prevDateTime.Value.Day
+						, prevDateTime.Value.Hour, 1, 1).AddHours(1);
+					break;
+				case PeriodUnit.Minute:
+					if (PeriodInfo.Period == 1) nextDateTime = new DateTime(prevDateTime.Value.Year, prevDateTime.Value.Month, prevDateTime.Value.Day
+						, prevDateTime.Value.Hour, 1, 1).AddHours(1);
+					else nextDateTime = prevDateTime.Value.Date.AddDays(1);
+					break;
+				case PeriodUnit.Hour:
+					if (PeriodInfo.Period == 1) nextDateTime = prevDateTime.Value.Date.AddDays(1);
+					else nextDateTime = new DateTime(prevDateTime.Value.Year, prevDateTime.Value.Month, 1).AddMonths(1);
+					break;
+				case PeriodUnit.Day:
 					nextDateTime = new DateTime(prevDateTime.Value.Year, prevDateTime.Value.Month, 1).AddMonths(1);
 					break;
-				case CandlePeriod.Weekly:
+				case PeriodUnit.Week:
 					nextDateTime = new DateTime(prevDateTime.Value.Year, (prevDateTime.Value.Month - 1) / 3 * 3 + 1, 1).AddMonths(3);
 					break;
-				case CandlePeriod.Monthly:
+				case PeriodUnit.Month:
 					nextDateTime = new DateTime(prevDateTime.Value.Year, 1, 1).AddYears(1);
 					break;
-				case CandlePeriod.Yearly:
+				case PeriodUnit.Year:
 					nextDateTime = new DateTime(prevDateTime.Value.Year / 10 * 10, 1, 1).AddYears(10);
 					break;
 			}
@@ -492,15 +562,21 @@ namespace MagicalNuts.UI.TradingChart
 		private string GetMainCustomeLabelName(DateTime? prev, DateTime cur)
 		{
 			string name = "";
-			switch (_CandlePeriod)
+			switch (PeriodInfo.Unit)
 			{
-				case CandlePeriod.Dayly:
-				case CandlePeriod.Weekly:
+				case PeriodUnit.Second:
+					break;
+				case PeriodUnit.Minute:
+					break;
+				case PeriodUnit.Hour:
+					break;
+				case PeriodUnit.Day:
+				case PeriodUnit.Week:
 					if (prev == null || prev.Value.Year != cur.Year) name = cur.ToString("yyyy");
 					else name = cur.ToString("M月");
 					break;
-				case CandlePeriod.Monthly:
-				case CandlePeriod.Yearly:
+				case PeriodUnit.Month:
+				case PeriodUnit.Year:
 					name = cur.ToString("yyyy");
 					break;
 			}
