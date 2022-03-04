@@ -310,61 +310,121 @@ namespace MagicalNuts.BackTest
 		/// </summary>
 		private void HandleOrders()
 		{
-			// キャンセル分と不正注文（ロット数０以下またはイグジット済み）を削除
-			for (int i = BackTestState.Orders.Count - 1; i >= 0; i--)
+			// ソート
+			SortOrders();
+
+			int i = 0;
+			while (i < BackTestState.Orders.Count)
 			{
-				if (BackTestState.Orders[i].Cancel || BackTestState.Orders[i].Lots <= 0
-					|| (BackTestState.Orders[i].PositionToClose != null && BackTestState.Orders[i].PositionToClose.IsExited))
-					BackTestState.Orders.RemoveAt(i);
-			}
+				Order order = BackTestState.Orders[i];
 
-			List<Order> orders = null;
-
-			// 成行売り
-			orders = BackTestState.Orders.Where(order => order.OrderType == OrderType.SellMarket).ToList();
-			foreach (Order order in orders)
-			{
-				SellMarket(order);
-
-				// 約定に関係なく削除
-				BackTestState.Orders.Remove(order);
-			}
-
-			// 成行買い
-			orders = BackTestState.Orders.Where(order => order.OrderType == OrderType.BuyMarket).ToList();
-			foreach (Order order in orders)
-			{
-				BuyMarket(order);
-
-				// 約定に関係なく削除
-				BackTestState.Orders.Remove(order);
-			}
-
-			// 後は順番通り
-			orders = BackTestState.Orders.Where(
-				order => order.OrderType != OrderType.BuyMarket && order.OrderType != OrderType.SellMarket).ToList();
-			foreach (Order order in orders)
-			{
-				bool ret = false;
+				// キャンセル、不正注文（ロット数０以下またはイグジット済み）なら削除してスキップ
+				if (order.Cancel || order.Lots <= 0 || (order.PositionToClose != null && order.PositionToClose.IsExited))
+				{
+					BackTestState.Orders.Remove(order);
+					continue;
+				}
+				
 				switch (order.OrderType)
 				{
-					case OrderType.BuyLimit:
-						ret = BuyLimit(order);
-						break;
-					case OrderType.SellLimit:
-						ret = SellLimit(order);
-						break;
-					case OrderType.BuyStop:
-						ret = BuyStop(order);
-						break;
-					case OrderType.SellStop:
-						ret = SellStop(order);
-						break;
-				}
+					case OrderType.BuyMarket:
+						{
+							(bool ret, Position position) = BuyMarket(order);
 
-				// 約定したら削除
-				if (ret) BackTestState.Orders.Remove(order);
+							// ストップロス
+							if (ret && order.StopLoss != null) BackTestState.Orders.Add(Order.GetSellStopOrder(order.StopLoss.Value, position));
+
+							// 約定に関係なく削除
+							BackTestState.Orders.Remove(order);
+
+							break;
+						}
+					case OrderType.SellMarket:
+						{
+							(bool ret, Position position) = SellMarket(order);
+
+							// ストップロス
+							if (ret && order.StopLoss != null) BackTestState.Orders.Add(Order.GetBuyStopOrder(order.StopLoss.Value, position));
+
+							// 約定に関係なく削除
+							BackTestState.Orders.Remove(order);
+
+							break;
+						}
+					case OrderType.BuyLimit:
+						{
+							(bool ret, Position position) = BuyLimit(order);
+
+							// ストップロス
+							if (ret && order.StopLoss != null) BackTestState.Orders.Add(Order.GetSellStopOrder(order.StopLoss.Value, position));
+
+							// 約定したら削除
+							if (ret) BackTestState.Orders.Remove(order);
+							else i++;
+
+							break;
+						}
+					case OrderType.SellLimit:
+						{
+							(bool ret, Position position) = SellLimit(order);
+
+							// ストップロス
+							if (ret && order.StopLoss != null) BackTestState.Orders.Add(Order.GetBuyStopOrder(order.StopLoss.Value, position));
+
+							// 約定したら削除
+							if (ret) BackTestState.Orders.Remove(order);
+							else i++;
+
+							break;
+						}
+					case OrderType.BuyStop:
+						{
+							(bool ret, Position position) = BuyStop(order);
+
+							// ストップロス
+							if (ret && order.StopLoss != null) BackTestState.Orders.Add(Order.GetSellStopOrder(order.StopLoss.Value, position));
+
+							// 約定したら削除
+							if (ret) BackTestState.Orders.Remove(order);
+							else i++;
+
+							break;
+						}
+					case OrderType.SellStop:
+						{
+							(bool ret, Position position) = SellStop(order);
+
+							// ストップロス
+							if (ret && order.StopLoss != null) BackTestState.Orders.Add(Order.GetBuyStopOrder(order.StopLoss.Value, position));
+
+							// 約定したら削除
+							if (ret) BackTestState.Orders.Remove(order);
+							else i++;
+
+							break;
+						}
+				}
 			}
+		}
+
+		/// <summary>
+		/// 注文をソートします。
+		/// </summary>
+		private void SortOrders()
+		{
+			List<Order> orders = new List<Order>();
+
+			// 成行売り
+			orders.AddRange(BackTestState.Orders.Where(order => order.OrderType == OrderType.SellMarket).ToList());
+
+			// 成行買い
+			orders.AddRange(BackTestState.Orders.Where(order => order.OrderType == OrderType.BuyMarket).ToList());
+
+			// その他
+			orders.AddRange(BackTestState.Orders.Where(order => order.OrderType != OrderType.BuyMarket && order.OrderType != OrderType.SellMarket).ToList());
+
+			// 入れ替え
+			BackTestState.Orders = orders;
 		}
 
 		/// <summary>
@@ -397,12 +457,12 @@ namespace MagicalNuts.BackTest
 		/// 成行買いします。
 		/// </summary>
 		/// <param name="order">注文</param>
-		/// <returns>約定したかどうか</returns>
-		private bool BuyMarket(Order order)
+		/// <returns>約定したかどうか、新規ポジション</returns>
+		private (bool, Position) BuyMarket(Order order)
 		{
 			// ロウソク足の集合取得
 			StrategyCandleCollection candles = StockCandlesDictionary[order.Stock.Code].GetShiftedCandles(BackTestState.DateTime);
-			if (candles == null || candles.Count == 0) return false;
+			if (candles == null || candles.Count == 0) return (false, null);
 
 			// 為替
 			decimal currency = BackTestState.CurrencyStore.GetPrice(order.Stock.MarketType, BackTestState.DateTime);
@@ -414,7 +474,7 @@ namespace MagicalNuts.BackTest
 			{
 				// ロット数の調整
 				decimal lots = GetAdjustedLots(price, order.Lots.Value, currency, order.Stock.Unit);
-				if (lots == 0) return false;
+				if (lots == 0) return (false, null);
 
 				// 新規買い
 				Position position = new Position(
@@ -427,6 +487,8 @@ namespace MagicalNuts.BackTest
 					GetEntryExecutionAmount(price, lots, currency),
 					GetEntryFee(price, lots, currency));
 				EntryPosition(position);
+
+				return (true, position);
 			}
 			else
 			{
@@ -438,21 +500,21 @@ namespace MagicalNuts.BackTest
 					GetExitFee(price, order.PositionToClose.Lots, currency),
 					(BackTestState.DateTime - order.PositionToClose.EntryDateTime.Value).Days);
 				ExitPosition(order.PositionToClose);
-			}
 
-			return true;
+				return (true, null);
+			}
 		}
 
 		/// <summary>
 		/// 成行売りします。
 		/// </summary>
 		/// <param name="order">注文</param>
-		/// <returns>約定したかどうか</returns>
-		private bool SellMarket(Order order)
+		/// <returns>約定したかどうか、新規ポジション</returns>
+		private (bool, Position) SellMarket(Order order)
 		{
 			// ロウソク足の集合取得
 			StrategyCandleCollection candles = StockCandlesDictionary[order.Stock.Code].GetShiftedCandles(BackTestState.DateTime);
-			if (candles == null || candles.Count == 0) return false;
+			if (candles == null || candles.Count == 0) return (false, null);
 
 			// 価格の決定
 			decimal price = candles[0].Open;
@@ -464,7 +526,7 @@ namespace MagicalNuts.BackTest
 			{
 				// ロット数の調整
 				decimal lots = GetAdjustedLots(price, order.Lots.Value, currency, order.Stock.Unit);
-				if (lots == 0) return false;
+				if (lots == 0) return (false, null);
 
 				// 新規売り
 				Position position = new Position(
@@ -477,6 +539,8 @@ namespace MagicalNuts.BackTest
 					GetEntryExecutionAmount(price, lots, currency),
 					GetEntryFee(price, lots, currency));
 				EntryPosition(position);
+
+				return (true, position);
 			}
 			else
 			{
@@ -488,27 +552,27 @@ namespace MagicalNuts.BackTest
 					GetExitFee(price, order.PositionToClose.Lots, currency),
 					(BackTestState.DateTime - order.PositionToClose.EntryExecution.DateTime).Days);
 				ExitPosition(order.PositionToClose);
-			}
 
-			return true;
+				return (true, null);
+			}
 		}
 
 		/// <summary>
 		/// 指値買いします。
 		/// </summary>
 		/// <param name="order">注文</param>
-		/// <returns>約定したかどうか</returns>
-		private bool BuyLimit(Order order)
+		/// <returns>約定したかどうか、新規ポジション</returns>
+		private (bool, Position) BuyLimit(Order order)
 		{
 			// ロウソク足の集合取得
 			StrategyCandleCollection candles = StockCandlesDictionary[order.Stock.Code].GetShiftedCandles(BackTestState.DateTime);
-			if (candles == null || candles.Count == 0) return false;
+			if (candles == null || candles.Count == 0) return (false, null);
 
 			// 価格の決定
 			decimal? price = null;
 			if (candles[0].Open <= order.Price.Value) price = candles[0].Open;
 			else if (candles[0].Low <= order.Price.Value) price = order.Price;
-			if (price == null) return false;
+			if (price == null) return (false, null);
 
 			// 為替
 			decimal currency = BackTestState.CurrencyStore.GetPrice(order.Stock.MarketType, BackTestState.DateTime);
@@ -517,7 +581,7 @@ namespace MagicalNuts.BackTest
 			{
 				// ロット数の調整
 				decimal lots = GetAdjustedLots(price.Value, order.Lots.Value, currency, order.Stock.Unit);
-				if (lots == 0) return false;
+				if (lots == 0) return (false, null);
 
 				// 新規買い
 				Position position = new Position(
@@ -530,6 +594,8 @@ namespace MagicalNuts.BackTest
 					GetEntryExecutionAmount(price.Value, lots, currency),
 					GetEntryFee(price.Value, lots, currency));
 				EntryPosition(position);
+
+				return (true, position);
 			}
 			else
 			{
@@ -541,27 +607,27 @@ namespace MagicalNuts.BackTest
 					GetExitFee(price.Value, order.PositionToClose.Lots, currency),
 					(BackTestState.DateTime - order.PositionToClose.EntryDateTime.Value).Days);
 				ExitPosition(order.PositionToClose);
-			}
 
-			return true;
+				return (true, null);
+			}
 		}
 
 		/// <summary>
 		/// 指値売りします。
 		/// </summary>
 		/// <param name="order">注文</param>
-		/// <returns>約定したかどうか</returns>
-		private bool SellLimit(Order order)
+		/// <returns>約定したかどうか、新規ポジション</returns>
+		private (bool, Position) SellLimit(Order order)
 		{
 			// ロウソク足取得
 			StrategyCandleCollection candles = StockCandlesDictionary[order.Stock.Code].GetShiftedCandles(BackTestState.DateTime);
-			if (candles == null || candles.Count == 0) return false;
+			if (candles == null || candles.Count == 0) return (false, null);
 
 			// 価格の決定
 			decimal? price = null;
 			if (candles[0].Open >= order.Price.Value) price = candles[0].Open;
 			else if (candles[0].High >= order.Price.Value) price = order.Price;
-			if (price == null) return false;
+			if (price == null) return (false, null);
 
 			// 為替
 			decimal currency = BackTestState.CurrencyStore.GetPrice(order.Stock.MarketType, BackTestState.DateTime);
@@ -570,7 +636,7 @@ namespace MagicalNuts.BackTest
 			{
 				// ロット数の調整
 				decimal lots = GetAdjustedLots(order.Price.Value, order.Lots.Value, currency, order.Stock.Unit);
-				if (lots == 0) return false;
+				if (lots == 0) return (false, null);
 
 				// 新規売り
 				Position position = new Position(
@@ -583,6 +649,8 @@ namespace MagicalNuts.BackTest
 					GetEntryExecutionAmount(price.Value, lots, currency),
 					GetEntryFee(price.Value, lots, currency));
 				EntryPosition(position);
+
+				return (true, position);
 			}
 			else
 			{
@@ -594,27 +662,27 @@ namespace MagicalNuts.BackTest
 					GetExitFee(price.Value, order.PositionToClose.Lots, currency),
 					(BackTestState.DateTime - order.PositionToClose.EntryDateTime.Value).Days);
 				ExitPosition(order.PositionToClose);
-			}
 
-			return true;
+				return (true, null);
+			}
 		}
 
 		/// <summary>
 		/// 逆指値買いします。
 		/// </summary>
 		/// <param name="order">注文</param>
-		/// <returns>約定したかどうか</returns>
-		private bool BuyStop(Order order)
+		/// <returns>約定したかどうか、新規ポジション</returns>
+		private (bool, Position) BuyStop(Order order)
 		{
 			// ロウソク足の集合取得
 			StrategyCandleCollection candles = StockCandlesDictionary[order.Stock.Code].GetShiftedCandles(BackTestState.DateTime);
-			if (candles == null || candles.Count == 0) return false;
+			if (candles == null || candles.Count == 0) return (false, null);
 
 			// 価格の決定
 			decimal? price = null;
 			if (candles[0].Open >= order.Price.Value) price = candles[0].Open;
 			else if (candles[0].High >= order.Price.Value) price = order.Price.Value;
-			if (price == null) return false;
+			if (price == null) return (false, null);
 
 			// 為替
 			decimal currency = BackTestState.CurrencyStore.GetPrice(order.Stock.MarketType, BackTestState.DateTime);
@@ -623,7 +691,7 @@ namespace MagicalNuts.BackTest
 			{
 				// ロット数の調整
 				decimal lots = GetAdjustedLots(order.Price.Value, order.Lots.Value, currency, order.Stock.Unit);
-				if (lots == 0) return false;
+				if (lots == 0) return (false, null);
 
 				// 新規買い
 				Position position = new Position(
@@ -636,6 +704,8 @@ namespace MagicalNuts.BackTest
 					GetEntryExecutionAmount(price.Value, lots, currency),
 					GetEntryFee(price.Value, lots, currency));
 				EntryPosition(position);
+
+				return (true, position);
 			}
 			else
 			{
@@ -647,27 +717,27 @@ namespace MagicalNuts.BackTest
 					GetExitFee(price.Value, order.PositionToClose.Lots, currency),
 					(BackTestState.DateTime - order.PositionToClose.EntryExecution.DateTime).Days);
 				ExitPosition(order.PositionToClose);
-			}
 
-			return true;
+				return (true, null);
+			}
 		}
 
 		/// <summary>
 		/// 逆指値売りします。
 		/// </summary>
 		/// <param name="order">注文</param>
-		/// <returns>約定したかどうか</returns>
-		private bool SellStop(Order order)
+		/// <returns>約定したかどうか、ポジション</returns>
+		private (bool, Position) SellStop(Order order)
 		{
 			// ロウソク足の集合取得
 			StrategyCandleCollection candles = StockCandlesDictionary[order.Stock.Code].GetShiftedCandles(BackTestState.DateTime);
-			if (candles == null || candles.Count == 0) return false;
+			if (candles == null || candles.Count == 0) return (false, null);
 
 			// 価格の決定
 			decimal? price = null;
 			if (candles[0].Open <= order.Price.Value) price = candles[0].Open;
 			else if (candles[0].Low < order.Price.Value) price = order.Price.Value;
-			if (price == null) return false;
+			if (price == null) return (false, null);
 
 			// 為替
 			decimal currency = BackTestState.CurrencyStore.GetPrice(order.Stock.MarketType, BackTestState.DateTime);
@@ -676,7 +746,7 @@ namespace MagicalNuts.BackTest
 			{
 				// ロット数の調整
 				decimal lots = GetAdjustedLots(order.Price.Value, order.Lots.Value, currency, order.Stock.Unit);
-				if (lots == 0) return false;
+				if (lots == 0) return (false, null);
 
 				// 新規売り
 				Position position = new Position(
@@ -689,6 +759,8 @@ namespace MagicalNuts.BackTest
 					GetEntryExecutionAmount(price.Value, lots, currency),
 					GetEntryFee(price.Value, lots,currency));
 				EntryPosition(position);
+
+				return (true, position);
 			}
 			else
 			{
@@ -700,9 +772,9 @@ namespace MagicalNuts.BackTest
 					GetExitFee(price.Value, order.PositionToClose.Lots, currency),
 					(BackTestState.DateTime - order.PositionToClose.EntryExecution.DateTime).Days);
 				ExitPosition(order.PositionToClose);
-			}
 
-			return true;
+				return (true, null);
+			}
 		}
 
 		#endregion
