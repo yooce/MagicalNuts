@@ -38,7 +38,7 @@ namespace TradingChartSample
 
 			// チャート
 			chart.SetUp();
-			chart.SetBaseCandles(new CandleCollection<string>(candles.ToList(), "N225"));
+			chart.SetBaseCandles("N225", candles);
 			RefreshChart();
 		}
 

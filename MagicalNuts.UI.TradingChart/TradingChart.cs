@@ -190,7 +190,7 @@ namespace MagicalNuts.UI.TradingChart
 		[Obsolete("代わりに 'SetBaseCandles()' を使用します。")]
 		public void SetDailyCandles(string code, Candle[] candles, int digits = 2)
 		{
-			SetBaseCandles(new CandleCollection<string>(candles.ToList(), code, PeriodUnit.Day, 1), digits);
+			SetBaseCandles(code, candles, digits, PeriodUnit.Day, 1);
 		}
 
 		/// <summary>
@@ -198,10 +198,10 @@ namespace MagicalNuts.UI.TradingChart
 		/// </summary>
 		/// <param name="candles">基本のロウソク足の集合</param>
 		/// <param name="digits">小数点以下の桁数</param>
-		public void SetBaseCandles(CandleCollection<string> candles, int digits = 2)
+		public void SetBaseCandles(string code, Candle[] candles, int digits = 2, PeriodUnit unit = PeriodUnit.Day, int period = 1)
 		{
 			// 日足設定
-			BaseCandles = candles;
+			BaseCandles = new CandleCollection<string>(candles.ToList(), code, unit, period);
 
 			// 価格表示フォーマット取得
 			PriceFormat = PriceFormatter.GetPriceFormatFromDigits(digits);
