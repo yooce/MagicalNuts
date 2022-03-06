@@ -264,22 +264,22 @@ namespace MagicalNuts.BackTest.Test
 
 			decimal lots = (decimal)controller.GetType().InvokeMember("GetAdjustedLots"
 				, BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.InvokeMethod, null, controller
-				, new object[] { 400.0m, 2.0m, 1.0m, 1 });
+				, new object[] { 400.0m, 2.0m, 1.0m, 1.0m });
 			Assert.Equal(2.0m, lots);
 
 			lots = (decimal)controller.GetType().InvokeMember("GetAdjustedLots"
 				, BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.InvokeMethod, null, controller
-				, new object[] { 495.0m, 3.0m, 1.0m, 1 });
+				, new object[] { 495.0m, 3.0m, 1.0m, 1.0m });
 			Assert.Equal(2.0m, lots);
 
 			lots = (decimal)controller.GetType().InvokeMember("GetAdjustedLots"
 				, BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.InvokeMethod, null, controller
-				, new object[] { 200.0m, 6.0m, 1.0m, 2 });
+				, new object[] { 200.0m, 6.0m, 1.0m, 2.0m });
 			Assert.Equal(4.0m, lots);
 
 			lots = (decimal)controller.GetType().InvokeMember("GetAdjustedLots"
 				, BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.InvokeMethod, null, controller
-				, new object[] { 999.0m, 3.0m, 1.0m, 2 });
+				, new object[] { 999.0m, 3.0m, 1.0m, 2.0m });
 			Assert.Equal(0.0m, lots);
 		}
 
@@ -305,7 +305,7 @@ namespace MagicalNuts.BackTest.Test
 
 			// êVãKîÉÇ¢
 			Order order = Order.GetBuyMarketOrder(stock, 2);
-			bool ret = (bool)controller.GetType().InvokeMember("BuyMarket"
+			(bool ret, _) = ((bool, Position))controller.GetType().InvokeMember("BuyMarket"
 				, BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.InvokeMethod, null, controller, new object[] { order });
 			Assert.True(ret);
 			Assert.Equal("1717", state.ActivePositions[0].Stock.Code);
@@ -317,7 +317,7 @@ namespace MagicalNuts.BackTest.Test
 			Assert.Equal(10, state.ActivePositions[0].EntryExecution.Fee);
 
 			order = Order.GetBuyMarketOrder(stock, 1);
-			ret = (bool)controller.GetType().InvokeMember("BuyMarket"
+			(ret, _) = ((bool, Position))controller.GetType().InvokeMember("BuyMarket"
 				, BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.InvokeMethod, null, controller, new object[] { order });
 			Assert.False(ret);
 			Assert.Single(state.ActivePositions);
@@ -351,7 +351,7 @@ namespace MagicalNuts.BackTest.Test
 			// ï‘çœîÉÇ¢
 			state.DateTime = new DateTime(2021, 10, 7);
 			order = Order.GetBuyMarketOrder(state.LastActiveShortPosition);
-			bool ret = (bool)controller.GetType().InvokeMember("BuyMarket"
+			(bool ret, _) = ((bool, Position))controller.GetType().InvokeMember("BuyMarket"
 				, BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.InvokeMethod, null, controller, new object[] { order });
 			Assert.True(ret);
 			Assert.Equal(new DateTime(2021, 10, 7), state.HistoricalPositions[0].ExitExecution.DateTime);
@@ -382,7 +382,7 @@ namespace MagicalNuts.BackTest.Test
 
 			// êVãKîÑÇË
 			Order order = Order.GetSellMarketOrder(stock, 2);
-			bool ret = (bool)controller.GetType().InvokeMember("SellMarket"
+			(bool ret, _) = ((bool, Position))controller.GetType().InvokeMember("SellMarket"
 				, BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.InvokeMethod, null, controller, new object[] { order });
 			Assert.True(ret);
 			Assert.Equal("1717", state.ActivePositions[0].Stock.Code);
@@ -394,7 +394,7 @@ namespace MagicalNuts.BackTest.Test
 			Assert.Equal(10, state.ActivePositions[0].EntryExecution.Fee);
 
 			order = Order.GetBuyMarketOrder(stock, 1);
-			ret = (bool)controller.GetType().InvokeMember("SellMarket"
+			(ret, _) = ((bool, Position))controller.GetType().InvokeMember("SellMarket"
 				, BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.InvokeMethod, null, controller, new object[] { order });
 			Assert.False(ret);
 			Assert.Single(state.ActivePositions);
@@ -428,7 +428,7 @@ namespace MagicalNuts.BackTest.Test
 			// éËédïëÇ¢îÑÇË
 			state.DateTime = new DateTime(2021, 10, 7);
 			order = Order.GetBuyMarketOrder(state.LastActiveShortPosition);
-			bool ret = (bool)controller.GetType().InvokeMember("SellMarket"
+			(bool ret, _) = ((bool, Position))controller.GetType().InvokeMember("SellMarket"
 				, BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.InvokeMethod, null, controller, new object[] { order });
 			Assert.True(ret);
 			Assert.Equal(new DateTime(2021, 10, 7), state.HistoricalPositions[0].ExitExecution.DateTime);

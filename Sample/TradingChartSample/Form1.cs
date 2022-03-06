@@ -38,13 +38,19 @@ namespace TradingChartSample
 
 			// チャート
 			chart.SetUp();
-			chart.SetDailyCandles(null, candles);
+			chart.SetBaseCandles(new CandleCollection<string>(candles.ToList(), "N225"));
+			RefreshChart();
 		}
 
 		private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
 		{
 			// 足種変更
-			chart.CandlePeriod = (CandlePeriod)comboBox1.SelectedIndex;
+			RefreshChart();
+		}
+
+		private void RefreshChart()
+		{
+			chart.PeriodInfo = new PeriodInfo((PeriodUnit)((int)PeriodUnit.Day + comboBox1.SelectedIndex), 1);
 		}
 
 		private void numericUpDown1_ValueChanged(object sender, EventArgs e)
