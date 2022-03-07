@@ -72,7 +72,7 @@ namespace MagicalNuts.BackTest
 		/// <summary>
 		/// 通貨の小数点以下の桁数
 		/// </summary>
-		public int CurrencyDigits = 0;
+		public int CurrencyDigits { get; set; }
 
 		/// <summary>
 		/// レバレッジ
@@ -116,6 +116,13 @@ namespace MagicalNuts.BackTest
 		/// 最後の保有中のショートポジション
 		/// </summary>
 		public Position LastActiveShortPosition => ActiveShortPositions.LastOrDefault();
+
+		/// <summary>
+		/// BackTestStatusクラスの新しいインスタンスを初期化します。（シリアライザーのためのコンストラクタなので使用非推奨）
+		/// </summary>
+		public BackTestStatus()
+		{
+		}
 
 		/// <summary>
 		/// BackTestStatusクラスの新しいインスタンスを初期化します。

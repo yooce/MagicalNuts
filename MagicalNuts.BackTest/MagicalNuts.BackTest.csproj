@@ -22,6 +22,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Utf8Json" Version="1.3.7" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\MagicalNuts.Indicator\MagicalNuts.Indicator.csproj" />
     <ProjectReference Include="..\MagicalNuts.Primitive\MagicalNuts.Primitive.csproj" />
   </ItemGroup>
