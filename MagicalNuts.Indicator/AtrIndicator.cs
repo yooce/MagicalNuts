@@ -44,6 +44,14 @@ namespace MagicalNuts.Indicator
 		}
 
 		/// <summary>
+		/// リセットします。
+		/// </summary>
+		public void Reset()
+		{
+			MovingAverageCalculator.Reset();
+		}
+
+		/// <summary>
 		/// 値を取得します。
 		/// </summary>
 		/// <param name="candles">ロウソク足のコレクション</param>
