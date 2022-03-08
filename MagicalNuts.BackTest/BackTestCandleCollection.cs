@@ -72,5 +72,28 @@ namespace MagicalNuts.BackTest
 
 			return candle;
 		}
+
+		/// <summary>
+		/// 指定日時の銘柄ごとの戦略用ロウソク足の集合を取得します。
+		/// </summary>
+		/// <param name="bt_stock_candles">銘柄ごとのバックテスト用ロウソク足の集合</param>
+		/// <param name="dt">日時</param>
+		/// <returns>指定日時の銘柄ごとの戦略用ロウソク足の集合</returns>
+		public static StrategyCandleCollection[] GetStrategyCandleCollectionsFromDateTime(BackTestCandleCollection[] btccs, DateTime dt)
+		{
+			List<StrategyCandleCollection> sccs = new List<StrategyCandleCollection>();
+			foreach (BackTestCandleCollection btcc in btccs)
+			{
+				// ロウソク足取得
+				StrategyCandleCollection scc = btcc.GetShiftedCandles(dt);
+
+				// ロウソク足が無ければスキップ
+				if (scc == null) continue;
+
+				// 追加
+				sccs.Add(scc);
+			}
+			return sccs.ToArray();
+		}
 	}
 }

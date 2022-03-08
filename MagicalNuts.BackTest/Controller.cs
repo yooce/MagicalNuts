@@ -59,7 +59,7 @@ namespace MagicalNuts.BackTest
 			while (BackTestState.DateTime <= args.EndDateTime)
 			{
 				// 銘柄更新
-				BackTestState.StockCandles = GetDaysStockCandles(args.StockCandles, BackTestState.DateTime);
+				BackTestState.StockCandles = BackTestCandleCollection.GetStrategyCandleCollectionsFromDateTime(args.StockCandles, BackTestState.DateTime);
 
 				if (BackTestState.StockCandles.Length > 0)
 				{
@@ -97,29 +97,6 @@ namespace MagicalNuts.BackTest
 			T result = GetBackTestResult<T>();
 
 			return result;
-		}
-
-		/// <summary>
-		/// 指定日時の銘柄ごとの戦略用ロウソク足の集合を取得します。
-		/// </summary>
-		/// <param name="bt_stock_candles">銘柄ごとのバックテスト用ロウソク足の集合</param>
-		/// <param name="dt">日時</param>
-		/// <returns>指定日時の銘柄ごとの戦略用ロウソク足の集合</returns>
-		private StrategyCandleCollection[] GetDaysStockCandles(BackTestCandleCollection[] bt_stock_candles, DateTime dt)
-		{
-			List<StrategyCandleCollection> st_stock_candles = new List<StrategyCandleCollection>();
-			foreach (BackTestCandleCollection bt_candles in bt_stock_candles)
-			{
-				// ロウソク足取得
-				StrategyCandleCollection st_candles = bt_candles.GetShiftedCandles(dt);
-
-				// ロウソク足が無ければスキップ
-				if (st_candles == null) continue;
-
-				// 追加
-				st_stock_candles.Add(st_candles);
-			}
-			return st_stock_candles.ToArray();
 		}
 
 		/// <summary>
