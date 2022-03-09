@@ -872,24 +872,31 @@ TradingChart chart = new TradingChart();
 ...
 
 chart.SetUp();
-chart.SetDailyCandles(null, candles);
+chart.SetBaseCandles(null, candles);
 ```
 
-日足の`Candle`のリストを用意して、`TradingChart.SetUp()`と`TradingChart.SetDailyCandles()`を呼びだすだけで下図のような株価チャートを実装できます。
+日足の`Candle`のリストを用意して、`TradingChart.SetUp()`と`TradingChart.SetBaseCandles()`を呼びだすだけで下図のような株価チャートを実装できます。
 
 ![image](https://user-images.githubusercontent.com/63818926/147149858-0fde1c26-7054-481c-8c75-eec9e2660bec.png)
 
-週足、月足、年足への変更も非常に簡単で、`TradingChart.CandlePeriod`を設定するだけです。
+足種の変更も非常に簡単で、`TradingChart.CandlePeriod`を設定するだけです。
 
 ```cs
 // 週足
-chart.CandlePeriod = CandlePeriod.Weekly;
+chart.PeriodInfo = new PeriodInfo(PeriodUnit.Week, 1);
 
 // 月足
-chart.CandlePeriod = CandlePeriod.Monthly;
+chart.PeriodInfo = new PeriodInfo(PeriodUnit.Month, 1);
 
 // 年足
-chart.CandlePeriod = CandlePeriod.Yearly;
+chart.PeriodInfo = new PeriodInfo(PeriodUnit.Year, 1);
+```
+
+日中足を表示することも可能です。次は、分足のロウソク足を用意し、4時間足に変更する例です。
+
+```cs
+chart.SetBaseCandles(null, candles, 2, PeriodUnit.Minute, 1);
+chart.PeriodInfo = new PeriodInfo(PeriodUnit.Hour, 4);
 ```
 
 また、チャートの拡縮にも対応しており、画面内のロウソク足の数を設定するイメージで`TradingChart.ScreenCandlesNum`を設定します。デフォルトは200で、減少させれば拡大、増加させれば縮小されます。
@@ -1341,8 +1348,10 @@ public class DonchianChannelBreakOutProperties : StrategyProperties
 /// <param name="end">終了日時</param>
 /// <param name="fc">手数料計算機</param>
 /// <param name="cs">為替ストア</param>
-public Arguments(IStrategy strategy, BackTestCandleCollection candles, DateTime begin, DateTime end, IFeeCalculator fc, CurrencyStore cs)
-	: this(strategy, new BackTestCandleCollection[] { candles }, begin, end, fc, cs)
+/// <param name="unit">期間単位</param>
+/// <param name="period">期間</param>
+public Arguments(IStrategy strategy, BackTestCandleCollection candles, DateTime begin, DateTime end, IFeeCalculator fc, CurrencyStore cs
+	, PeriodUnit unit = PeriodUnit.Day, int period = 1) : this(strategy, new BackTestCandleCollection[] { candles }, begin, end, fc, cs, unit, period)
 {
 }
 ```
@@ -1357,8 +1366,10 @@ public Arguments(IStrategy strategy, BackTestCandleCollection candles, DateTime 
 | end | DateTime | バックテスト終了日 |
 | fc | IFeeCalculator | 手数料計算機 |
 | cs | CurrencyStore | 為替ストア |
+| unit | PeriodUnit | 期間単位 |
+| period | int | 期間 |
 
-最後の２つは省略可能で、手数料計算機は後述します。為替ストアは米国株など、株価は日本円以外だが資産は日本円で扱うバックテストのための仕組みですが、現時点では検証が不十分なため、動作保証外とさせていただきます。先頭４つが必須の設定となり、例えば、次のように設定します。
+最後の４つは省略可能で、手数料計算機は後述します。為替ストアは米国株など、株価は日本円以外だが資産は日本円で扱うバックテストのための仕組みですが、現時点では検証が不十分なため、動作保証外とさせていただきます。期間単位と期間は、バックテストで使うロウソク足の足種を設定します。省略すると日足となります。先頭４つが必須の設定となり、例えば、次のように設定します。
 
 ```cs
 // 売買戦略
