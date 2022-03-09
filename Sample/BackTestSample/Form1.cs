@@ -70,7 +70,7 @@ namespace BackTestSample
 
 			// バックテスト
 			Arguments args = new Arguments(strategy
-				, new BackTestCandleCollection(candles, new Stock(code, code, 100)), begin, end, FeeCalculators[comboBoxFee.SelectedIndex]);
+				, new BackTestCandleCollection(candles, new Stock(code, code, 100)), begin, end, FeeCalculators[comboBoxFee.SelectedIndex], PeriodUnit.Day, 1);
 			Controller controller = new Controller();
 			BackTestResult result = await controller.BackTestAsync<BackTestResult>(args);
 

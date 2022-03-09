@@ -36,19 +36,21 @@ namespace TradingChartSample
 			this.comboBox1 = new System.Windows.Forms.ComboBox();
 			this.menuStrip1 = new System.Windows.Forms.MenuStrip();
 			this.toolStripMenuItemIndicator = new System.Windows.Forms.ToolStripMenuItem();
+			this.toolStripMenuItemSample = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripMenuItemMa = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripMenuItemBb = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripMenuItemAtr = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripMenuItemMacd = new System.Windows.Forms.ToolStripMenuItem();
 			this.panel1 = new System.Windows.Forms.Panel();
-			this.toolStripMenuItemSample = new System.Windows.Forms.ToolStripMenuItem();
+			this.label2 = new System.Windows.Forms.Label();
+			this.comboBox2 = new System.Windows.Forms.ComboBox();
 			((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).BeginInit();
 			this.menuStrip1.SuspendLayout();
 			this.SuspendLayout();
 			// 
 			// numericUpDown1
 			// 
-			this.numericUpDown1.Location = new System.Drawing.Point(215, 27);
+			this.numericUpDown1.Location = new System.Drawing.Point(382, 27);
 			this.numericUpDown1.Maximum = new decimal(new int[] {
             1000,
             0,
@@ -72,7 +74,7 @@ namespace TradingChartSample
 			// label1
 			// 
 			this.label1.AutoSize = true;
-			this.label1.Location = new System.Drawing.Point(68, 31);
+			this.label1.Location = new System.Drawing.Point(235, 31);
 			this.label1.Name = "label1";
 			this.label1.Size = new System.Drawing.Size(85, 15);
 			this.label1.TabIndex = 11;
@@ -80,7 +82,7 @@ namespace TradingChartSample
 			// 
 			// button2
 			// 
-			this.button2.Location = new System.Drawing.Point(301, 27);
+			this.button2.Location = new System.Drawing.Point(468, 27);
 			this.button2.Name = "button2";
 			this.button2.Size = new System.Drawing.Size(50, 23);
 			this.button2.TabIndex = 10;
@@ -90,7 +92,7 @@ namespace TradingChartSample
 			// 
 			// button1
 			// 
-			this.button1.Location = new System.Drawing.Point(159, 27);
+			this.button1.Location = new System.Drawing.Point(326, 27);
 			this.button1.Name = "button1";
 			this.button1.Size = new System.Drawing.Size(50, 23);
 			this.button1.TabIndex = 9;
@@ -103,11 +105,13 @@ namespace TradingChartSample
 			this.comboBox1.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
 			this.comboBox1.FormattingEnabled = true;
 			this.comboBox1.Items.AddRange(new object[] {
+            "分",
+            "時間",
             "日",
             "週",
             "月",
             "年"});
-			this.comboBox1.Location = new System.Drawing.Point(12, 27);
+			this.comboBox1.Location = new System.Drawing.Point(179, 27);
 			this.comboBox1.Name = "comboBox1";
 			this.comboBox1.Size = new System.Drawing.Size(50, 23);
 			this.comboBox1.TabIndex = 8;
@@ -135,31 +139,38 @@ namespace TradingChartSample
 			this.toolStripMenuItemIndicator.Size = new System.Drawing.Size(92, 20);
 			this.toolStripMenuItemIndicator.Text = "インジケーター(&I)";
 			// 
+			// toolStripMenuItemSample
+			// 
+			this.toolStripMenuItemSample.Name = "toolStripMenuItemSample";
+			this.toolStripMenuItemSample.Size = new System.Drawing.Size(169, 22);
+			this.toolStripMenuItemSample.Text = "サンプル(&S)";
+			this.toolStripMenuItemSample.Click += new System.EventHandler(this.toolStripMenuItemSample_Click);
+			// 
 			// toolStripMenuItemMa
 			// 
 			this.toolStripMenuItemMa.Name = "toolStripMenuItemMa";
-			this.toolStripMenuItemMa.Size = new System.Drawing.Size(180, 22);
+			this.toolStripMenuItemMa.Size = new System.Drawing.Size(169, 22);
 			this.toolStripMenuItemMa.Text = "移動平均(&M)";
 			this.toolStripMenuItemMa.Click += new System.EventHandler(this.toolStripMenuItemMa_Click);
 			// 
 			// toolStripMenuItemBb
 			// 
 			this.toolStripMenuItemBb.Name = "toolStripMenuItemBb";
-			this.toolStripMenuItemBb.Size = new System.Drawing.Size(180, 22);
+			this.toolStripMenuItemBb.Size = new System.Drawing.Size(169, 22);
 			this.toolStripMenuItemBb.Text = "ボリンジャーバンド(&B)";
 			this.toolStripMenuItemBb.Click += new System.EventHandler(this.toolStripMenuItemBb_Click);
 			// 
 			// toolStripMenuItemAtr
 			// 
 			this.toolStripMenuItemAtr.Name = "toolStripMenuItemAtr";
-			this.toolStripMenuItemAtr.Size = new System.Drawing.Size(180, 22);
+			this.toolStripMenuItemAtr.Size = new System.Drawing.Size(169, 22);
 			this.toolStripMenuItemAtr.Text = "ATR(&A)";
 			this.toolStripMenuItemAtr.Click += new System.EventHandler(this.toolStripMenuItemAtr_Click);
 			// 
 			// toolStripMenuItemMacd
 			// 
 			this.toolStripMenuItemMacd.Name = "toolStripMenuItemMacd";
-			this.toolStripMenuItemMacd.Size = new System.Drawing.Size(180, 22);
+			this.toolStripMenuItemMacd.Size = new System.Drawing.Size(169, 22);
 			this.toolStripMenuItemMacd.Text = "MACD(&D)";
 			this.toolStripMenuItemMacd.Click += new System.EventHandler(this.toolStripMenuItemMacd_Click);
 			// 
@@ -173,12 +184,26 @@ namespace TradingChartSample
 			this.panel1.Size = new System.Drawing.Size(1008, 481);
 			this.panel1.TabIndex = 14;
 			// 
-			// toolStripMenuItemSample
+			// label2
 			// 
-			this.toolStripMenuItemSample.Name = "toolStripMenuItemSample";
-			this.toolStripMenuItemSample.Size = new System.Drawing.Size(180, 22);
-			this.toolStripMenuItemSample.Text = "サンプル(&S)";
-			this.toolStripMenuItemSample.Click += new System.EventHandler(this.toolStripMenuItemSample_Click);
+			this.label2.AutoSize = true;
+			this.label2.Location = new System.Drawing.Point(12, 31);
+			this.label2.Name = "label2";
+			this.label2.Size = new System.Drawing.Size(34, 15);
+			this.label2.TabIndex = 15;
+			this.label2.Text = "銘柄:";
+			// 
+			// comboBox2
+			// 
+			this.comboBox2.FormattingEnabled = true;
+			this.comboBox2.Items.AddRange(new object[] {
+            "日経平均株価",
+            "BTC/USDT"});
+			this.comboBox2.Location = new System.Drawing.Point(52, 28);
+			this.comboBox2.Name = "comboBox2";
+			this.comboBox2.Size = new System.Drawing.Size(121, 23);
+			this.comboBox2.TabIndex = 16;
+			this.comboBox2.SelectedIndexChanged += new System.EventHandler(this.comboBox2_SelectedIndexChanged);
 			// 
 			// Form1
 			// 
@@ -186,6 +211,8 @@ namespace TradingChartSample
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.BackColor = System.Drawing.Color.White;
 			this.ClientSize = new System.Drawing.Size(1008, 537);
+			this.Controls.Add(this.comboBox2);
+			this.Controls.Add(this.label2);
 			this.Controls.Add(this.panel1);
 			this.Controls.Add(this.numericUpDown1);
 			this.Controls.Add(this.label1);
@@ -222,6 +249,8 @@ namespace TradingChartSample
 		private ToolStripMenuItem toolStripMenuItemAtr;
 		private ToolStripMenuItem toolStripMenuItemMacd;
 		private ToolStripMenuItem toolStripMenuItemSample;
+		private Label label2;
+		private ComboBox comboBox2;
 	}
 }
 

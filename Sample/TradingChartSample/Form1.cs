@@ -9,6 +9,8 @@ namespace TradingChartSample
 	[SupportedOSPlatform("windows")]
 	public partial class Form1 : Form
 	{
+		private static readonly string[] StockNames = { "N225", "BTCUSDT" };
+
 		private TradingChart chart = null;
 		private SamplePlotter SamplePlotter = null;
 		private MovingAveragePlotter MovingAveragePlotter = null;
@@ -25,21 +27,15 @@ namespace TradingChartSample
 			chart.Dock = DockStyle.Fill;
 			panel1.Controls.Add(chart);
 
-			comboBox1.SelectedIndex = 0;
+			comboBox1.SelectedIndex = 2;
 		}
 
 		private void Form1_Load(object sender, EventArgs e)
 		{
-			// 株価
-			StreamReader sr = new StreamReader("N225.json");
-			string str = sr.ReadToEnd();
-			sr.Close();
-			Candle[] candles = Utf8Json.JsonSerializer.Deserialize<Candle[]>(str);
-
 			// チャート
 			chart.SetUp();
-			chart.SetBaseCandles("N225", candles);
-			RefreshChart();
+
+			comboBox2.SelectedIndex = 0;
 		}
 
 		private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
@@ -50,7 +46,7 @@ namespace TradingChartSample
 
 		private void RefreshChart()
 		{
-			chart.PeriodInfo = new PeriodInfo((PeriodUnit)((int)PeriodUnit.Day + comboBox1.SelectedIndex), 1);
+			chart.PeriodInfo = new PeriodInfo((PeriodUnit)((int)PeriodUnit.Minute + comboBox1.SelectedIndex), 1);
 		}
 
 		private void numericUpDown1_ValueChanged(object sender, EventArgs e)
@@ -128,6 +124,33 @@ namespace TradingChartSample
 				chart.RemovePlotter(plotter);
 				return null;
 			}
+		}
+
+		private void comboBox2_SelectedIndexChanged(object sender, EventArgs e)
+		{
+			// 株価
+			StreamReader sr = new StreamReader($"{ StockNames[comboBox2.SelectedIndex] }.json");
+			string str = sr.ReadToEnd();
+			sr.Close();
+			Candle[] candles = Utf8Json.JsonSerializer.Deserialize<Candle[]>(str);
+
+			PeriodUnit unit = PeriodUnit.Day;
+			int period = 1;
+			switch (comboBox2.SelectedIndex)
+			{
+				case 0:
+					unit = PeriodUnit.Day;
+					period = 1;
+					break;
+				case 1:
+					unit = PeriodUnit.Minute;
+					period = 1;
+					break;
+			}
+
+			// チャート
+			chart.SetBaseCandles("N225", candles, 2, unit, period);
+			RefreshChart();
 		}
 	}
 }
