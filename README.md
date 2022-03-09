@@ -905,10 +905,10 @@ chart.PeriodInfo = new PeriodInfo(PeriodUnit.Hour, 4);
 chart.ScreenCandlesNum = 250;
 ```
 
-米国株や為替のチャートを表示をする場合に、グラフの軸目盛の小数点以下の桁数を設定する機能もあります。その場合は、`TradingChart.SetDailyCandles()`の第３引数に表示したい小数点以下の桁数を渡してください。
+米国株や為替のチャートを表示をする場合に、グラフの軸目盛の小数点以下の桁数を設定する機能もあります。その場合は、`TradingChart.SetBaseCandles()`の第３引数に表示したい小数点以下の桁数を渡してください。
 
 ```cs
-chart.SetDailyCandles(null, candles, 2);
+chart.SetBaseCandles(null, candles, 2);
 ```
 
 これで、小数点以下２桁までを表示することができます。サンプルとして`TradingChartSample`を用意していますので、詳細はそちらをご覧ください。
