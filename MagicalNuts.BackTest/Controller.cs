@@ -121,7 +121,7 @@ namespace MagicalNuts.BackTest
 			// ここではMarketAssetsの更新はしない
 
 			BackTestState.BookAssets += position.Return.Value + position.EntryExecution.Fee; // エントリー時の手数料を足し戻す
-			BackTestState.NetBalance += position.ExitExecution.Amount / BackTestState.Leverage - position.ExitExecution.Fee;
+			BackTestState.NetBalance += position.EntryExecution.Amount / BackTestState.Leverage + position.Return.Value + position.ExitExecution.Fee;
 			BackTestState.ActivePositions.Remove(position);
 			BackTestState.HistoricalPositions.Add(position);
 		}
