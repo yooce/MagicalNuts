@@ -1215,11 +1215,6 @@ chart.AddPlotter(plotter);
 public interface IStrategy : IPropertyHolder
 {
 	/// <summary>
-	/// 参照するロウソク足の数
-	/// </summary>
-	int ReferenceCandlesNum { get; }
-
-	/// <summary>
 	/// 非同期で準備します。
 	/// </summary>
 	/// <returns>非同期タスク</returns>
@@ -1234,9 +1229,7 @@ public interface IStrategy : IPropertyHolder
 }
 ```
 
-`ReferenceCandlesNum`は参照する過去のロウソク足の数を入れておきます。例えば、25日移動平均を利用する売買戦略であれば、`25`を返すようにしておけば良いです。`SetUpAsync()`は準備処理です。
-
-`GetOrders()`に具体的な売買処理を実装します。`GetOrders()`は`state`と`orders`の２つを引数に取り、簡単に言えば、`state`内のロウソク足やその他情報を見て、注文を`orders`に追加するイメージです。`BackTestSample`に`DonchianChannelBreakOut`という売買戦略を実装していますので、それを見ていきましょう。
+`SetUpAsync()`に準備処理、`GetOrders()`に具体的な売買処理を実装します。`GetOrders()`は`state`と`orders`の２つを引数に取り、簡単に言えば、`state`内のロウソク足やその他情報を見て、注文を`orders`に追加するイメージです。`BackTestSample`に`DonchianChannelBreakOut`という売買戦略を実装していますので、それを見ていきましょう。
 
 `DonchianChannelBreakOut`は**ドンチアン・チャネル・ブレイクアウト**を実装したものです。これは、「価格が過去20日間の最高値を上抜けしたら買い、過去20日間の最安値を下抜けしたら空売りする」という売買戦略です。これを実装したのが`DonchianChannelBreakOut`です。
 
