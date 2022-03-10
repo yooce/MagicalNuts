@@ -10,11 +10,6 @@ namespace MagicalNuts.BackTest
 	public interface IStrategy : IPropertyHolder
 	{
 		/// <summary>
-		/// 参照するロウソク足の数
-		/// </summary>
-		int ReferenceCandlesNum { get; }
-
-		/// <summary>
 		/// 非同期で準備します。
 		/// </summary>
 		/// <returns>非同期タスク</returns>
